@@ -8,6 +8,7 @@ import {
 import dotenv from 'dotenv';
 
 import { classifyReportMessageType } from '../../service/ClassifyReportMessageTypeService';
+import { getStartTextMessage } from '../../service/StartMessageService';
 
 if (process.env.NODE_ENV == 'development') {
   dotenv.config();
@@ -23,7 +24,7 @@ const clientConfig: ClientConfig = {
 const client = new Client(clientConfig);
 
 // Function handler to receive the text.
-export const textEventHandler = async (
+export const eventHandler = async (
   event: WebhookEvent
 ): Promise<MessageAPIResponseBase | undefined> => {
   // Process all variables here.
@@ -45,10 +46,7 @@ export const textEventHandler = async (
   let response: TextMessage;
 
   if (reportMessageType == 'Start') {
-    response = {
-      type: 'text',
-      text: '奥多摩町役場です。獣害の通報ありがとうございます。心よりお見舞い申し上げます。',
-    };
+    response = getStartTextMessage();
   } else {
     response = {
       type: 'text',
