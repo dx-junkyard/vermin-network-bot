@@ -14,7 +14,7 @@ export function getStartTextMessage(): TemplateMessage {
     altText: '獣害報告開始',
     template: {
       type: 'buttons',
-      text: messages.join(', '),
+      text: messages.join('\n'),
       actions: [
         {
           type: 'message',
