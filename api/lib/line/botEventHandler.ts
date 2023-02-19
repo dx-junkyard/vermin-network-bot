@@ -2,6 +2,7 @@ import {
   Client,
   ClientConfig,
   MessageAPIResponseBase,
+  TextEventMessage,
   TextMessage,
   WebhookEvent,
 } from '@line/bot-sdk';
@@ -43,18 +44,23 @@ export const botEventHandler = async (
 
   const reportMessageType = classifyReportMessageType(event.message);
 
-  let response: TextMessage;
-
   if (reportMessageType == 'Start') {
-    response = getStartTextMessage();
+    const response = getStartTextMessage();
+    await client.replyMessage(replyToken, response);
+  } else if (reportMessageType == 'AnimalType') {
+    const { text } = event.message as TextEventMessage;
+    const response: TextMessage = {
+      type: 'text',
+      // FIXME: 入力が分類できなかった場合のメッセージを検討する
+      text: `${text}の被害ですね。承りました。`,
+    };
+    await client.replyMessage(replyToken, response);
   } else {
-    response = {
+    const response: TextMessage = {
       type: 'text',
       // FIXME: 入力が分類できなかった場合のメッセージを検討する
       text: '申し訳ありません。入力を受け付けることができませんでした。',
     };
+    await client.replyMessage(replyToken, response);
   }
-
-  // Reply to the user.
-  await client.replyMessage(replyToken, response);
 };

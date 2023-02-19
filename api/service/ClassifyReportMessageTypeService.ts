@@ -15,7 +15,7 @@ export function classifyReportMessageType(
     switch (true) {
       case /通報をはじめる/.test(text):
         return 'Start';
-      case /イノシシ|シカ|サル/.test(text):
+      case /イノシシ|シカ|サル|その他、わからない/.test(text):
         return 'AnimalType';
       default:
         return 'Undefined';
