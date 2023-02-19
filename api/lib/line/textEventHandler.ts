@@ -7,8 +7,6 @@ import {
 } from '@line/bot-sdk';
 import dotenv from 'dotenv';
 import { classifyReportMessageType } from 'service/ClassifyReportMessageTypeService';
-import { getReportMessage } from 'types/message';
-import { getReportMessageType } from 'types/ReportMessageType';
 
 if (process.env.NODE_ENV == 'development') {
   dotenv.config();
