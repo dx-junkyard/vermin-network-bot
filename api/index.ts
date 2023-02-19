@@ -3,7 +3,7 @@ import { middleware, MiddlewareConfig, WebhookEvent } from '@line/bot-sdk';
 import dotenv from 'dotenv';
 import express, { Application, Request, Response } from 'express';
 
-import { eventHandler } from './lib/line/textEventHandler';
+import { botEventHandler } from './lib/line/botEventHandler';
 
 if (process.env.NODE_ENV == 'development') {
   dotenv.config();
@@ -46,7 +46,7 @@ app.post(
     const results = await Promise.all(
       events.map(async (event: WebhookEvent) => {
         try {
-          await eventHandler(event);
+          await botEventHandler(event);
         } catch (err: unknown) {
           if (err instanceof Error) {
             console.error(err);

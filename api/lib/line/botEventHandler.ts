@@ -24,7 +24,7 @@ const clientConfig: ClientConfig = {
 const client = new Client(clientConfig);
 
 // Function handler to receive the text.
-export const eventHandler = async (
+export const botEventHandler = async (
   event: WebhookEvent
 ): Promise<MessageAPIResponseBase | undefined> => {
   // Process all variables here.
