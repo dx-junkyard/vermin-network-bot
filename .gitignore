@@ -1,0 +1,9 @@
+# Dependencies
+node_modules/
+
+# Built files.
+dist/
+.env
+.vercel
+tsconfig.tsbuildinfo
+yarn-error.log

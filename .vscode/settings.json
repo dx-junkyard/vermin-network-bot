@@ -1,0 +1,13 @@
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+  },
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "stylelint.validate": ["css", "scss"],
+  "scss.validate": false,
+  "css.validate": false
+}
