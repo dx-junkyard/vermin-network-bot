@@ -1,13 +1,13 @@
 import {
-  ClientConfig,
   Client,
-  WebhookEvent,
-  TextMessage,
+  ClientConfig,
   MessageAPIResponseBase,
+  TextMessage,
+  WebhookEvent,
 } from '@line/bot-sdk';
+import dotenv from 'dotenv';
 
-if ((process.env.NODE_ENV = 'development')) {
-  const dotenv = require('dotenv');
+if (process.env.NODE_ENV == 'development') {
   dotenv.config();
 }
 
