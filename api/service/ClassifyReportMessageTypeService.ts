@@ -3,7 +3,8 @@ import {
   LocationEventMessage,
   TextEventMessage,
 } from '@line/bot-sdk';
-import { ReportMessageType } from 'types/ReportMessageType';
+
+import { ReportMessageType } from '../types/ReportMessageType';
 
 export function classifyReportMessageType(
   eventMessage: TextEventMessage | ImageEventMessage | LocationEventMessage

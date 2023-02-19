@@ -6,7 +6,8 @@ import {
   WebhookEvent,
 } from '@line/bot-sdk';
 import dotenv from 'dotenv';
-import { classifyReportMessageType } from 'service/ClassifyReportMessageTypeService';
+
+import { classifyReportMessageType } from '../../service/ClassifyReportMessageTypeService';
 
 if (process.env.NODE_ENV == 'development') {
   dotenv.config();
