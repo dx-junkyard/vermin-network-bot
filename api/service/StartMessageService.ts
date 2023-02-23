@@ -1,6 +1,6 @@
 import { TemplateMessage, TextMessage } from '@line/bot-sdk';
 
-export function getStartTextMessage(): (TextMessage | TemplateMessage)[] {
+export function getReplyStartMessage(): (TextMessage | TemplateMessage)[] {
   return [
     {
       type: 'text',

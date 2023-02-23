@@ -8,8 +8,9 @@ import {
 } from '@line/bot-sdk';
 import dotenv from 'dotenv';
 
+import { getReployFromAnimalMessage } from '../../service/AnimalMessageService';
 import { classifyReportMessageType } from '../../service/ClassifyReportMessageTypeService';
-import { getStartTextMessage } from '../../service/StartMessageService';
+import { getReplyStartMessage } from '../../service/StartMessageService';
 
 if (process.env.NODE_ENV == 'development') {
   dotenv.config();
@@ -45,15 +46,12 @@ export const botEventHandler = async (
   const reportMessageType = classifyReportMessageType(event.message);
 
   if (reportMessageType == 'Start') {
-    const response = getStartTextMessage();
+    const response = getReplyStartMessage();
     await lineClient.replyMessage(replyToken, response);
   } else if (reportMessageType == 'Animal') {
-    const { text } = event.message as TextEventMessage;
-    const response: TextMessage = {
-      type: 'text',
-      // FIXME: 入力が分類できなかった場合のメッセージを検討する
-      text: `${text}の被害ですね。承りました。`,
-    };
+    const response = getReployFromAnimalMessage(
+      event.message as TextEventMessage
+    );
     await lineClient.replyMessage(replyToken, response);
   } else {
     const response: TextMessage = {
