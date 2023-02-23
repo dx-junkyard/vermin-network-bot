@@ -22,7 +22,7 @@ const clientConfig: ClientConfig = {
 };
 
 // Create a new LINE SDK client.
-const client = new Client(clientConfig);
+export const lineClient = new Client(clientConfig);
 
 // Function handler to receive the text.
 export const botEventHandler = async (
@@ -46,21 +46,21 @@ export const botEventHandler = async (
 
   if (reportMessageType == 'Start') {
     const response = getStartTextMessage();
-    await client.replyMessage(replyToken, response);
-  } else if (reportMessageType == 'AnimalType') {
+    await lineClient.replyMessage(replyToken, response);
+  } else if (reportMessageType == 'Animal') {
     const { text } = event.message as TextEventMessage;
     const response: TextMessage = {
       type: 'text',
       // FIXME: 入力が分類できなかった場合のメッセージを検討する
       text: `${text}の被害ですね。承りました。`,
     };
-    await client.replyMessage(replyToken, response);
+    await lineClient.replyMessage(replyToken, response);
   } else {
     const response: TextMessage = {
       type: 'text',
       // FIXME: 入力が分類できなかった場合のメッセージを検討する
       text: '申し訳ありません。入力を受け付けることができませんでした。',
     };
-    await client.replyMessage(replyToken, response);
+    await lineClient.replyMessage(replyToken, response);
   }
 };

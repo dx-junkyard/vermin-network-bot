@@ -1,7 +1,7 @@
 export type ReportMessageType =
   | 'Start'
-  | 'AnimalType'
+  | 'Animal'
   | 'Geo'
-  | 'ImageOfDamageSituation'
+  | 'Damage'
   | 'Complete'
   | 'Undefined';
