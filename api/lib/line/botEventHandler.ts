@@ -4,7 +4,6 @@ import {
   Message,
   MessageAPIResponseBase,
   TextEventMessage,
-  TextMessage,
   WebhookEvent,
 } from '@line/bot-sdk';
 import dotenv from 'dotenv';
