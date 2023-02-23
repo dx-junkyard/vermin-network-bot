@@ -18,6 +18,8 @@ export function classifyReportMessageType(
         return ReportMessage.START;
       case /イノシシ|シカ|サル|その他、わからない/.test(text):
         return ReportMessage.ANIMAL;
+      case /送信しない/.test(text):
+        return ReportMessage.DAMAGE;
       default:
         return ReportMessage.UNDEFINED;
     }
