@@ -4,7 +4,7 @@ import {
   TextEventMessage,
 } from '@line/bot-sdk';
 
-import { ReportMessageType } from '../types/ReportMessageType';
+import { ReportMessage, ReportMessageType } from '../types/ReportMessageType';
 
 // FIXME: 直前の投稿済みメッセージを判定条件に追加する
 export function classifyReportMessageType(
@@ -15,17 +15,17 @@ export function classifyReportMessageType(
     // FIXME: メッセージをグローバルに管理
     switch (true) {
       case /通報をはじめる/.test(text):
-        return 'Start';
+        return ReportMessage.START;
       case /イノシシ|シカ|サル|その他、わからない/.test(text):
-        return 'Animal';
+        return ReportMessage.ANIMAL;
       default:
-        return 'Undefined';
+        return ReportMessage.UNDEFINED;
     }
   } else if (eventMessage.type == 'image') {
-    return 'Damage';
+    return ReportMessage.DAMAGE;
   } else if (eventMessage.type == 'location') {
-    return 'Geo';
+    return ReportMessage.GEO;
   }
 
-  return 'Undefined';
+  return ReportMessage.UNDEFINED;
 }

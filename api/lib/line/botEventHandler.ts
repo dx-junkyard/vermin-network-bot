@@ -1,6 +1,7 @@
 import {
   Client,
   ClientConfig,
+  Message,
   MessageAPIResponseBase,
   TextEventMessage,
   TextMessage,
@@ -10,7 +11,9 @@ import dotenv from 'dotenv';
 
 import { getReployFromAnimalMessage } from '../../service/AnimalMessageService';
 import { classifyReportMessageType } from '../../service/ClassifyReportMessageTypeService';
+import { getReplyGeoMessage } from '../../service/GeoMessageService';
 import { getReplyStartMessage } from '../../service/StartMessageService';
+import { ReportMessage } from '../../types/ReportMessageType';
 
 if (process.env.NODE_ENV == 'development') {
   dotenv.config();
@@ -45,20 +48,26 @@ export const botEventHandler = async (
 
   const reportMessageType = classifyReportMessageType(event.message);
 
-  if (reportMessageType == 'Start') {
-    const response = getReplyStartMessage();
-    await lineClient.replyMessage(replyToken, response);
-  } else if (reportMessageType == 'Animal') {
-    const response = getReployFromAnimalMessage(
-      event.message as TextEventMessage
-    );
-    await lineClient.replyMessage(replyToken, response);
-  } else {
-    const response: TextMessage = {
-      type: 'text',
-      // FIXME: 入力が分類できなかった場合のメッセージを検討する
-      text: '申し訳ありません。入力を受け付けることができませんでした。',
-    };
-    await lineClient.replyMessage(replyToken, response);
+  let response: Message | Message[];
+
+  switch (reportMessageType) {
+    case ReportMessage.START:
+      response = getReplyStartMessage();
+      break;
+    case ReportMessage.ANIMAL:
+      response = getReployFromAnimalMessage(event.message as TextEventMessage);
+      break;
+    case ReportMessage.GEO:
+      response = getReplyGeoMessage();
+      break;
+    case ReportMessage.DAMAGE:
+    case ReportMessage.UNDEFINED:
+    default:
+      response = {
+        type: 'text',
+        // FIXME: 入力が分類できなかった場合のメッセージを検討する
+        text: '申し訳ありません。入力を受け付けることができませんでした。',
+      };
   }
+  await lineClient.replyMessage(replyToken, response);
 };

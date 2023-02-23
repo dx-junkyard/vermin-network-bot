@@ -1,7 +1,11 @@
+export const ReportMessage = {
+  START: 'start',
+  ANIMAL: 'animal',
+  GEO: 'geo',
+  DAMAGE: 'damage',
+  COMPLETE: 'complete',
+  UNDEFINED: 'undefined',
+} as const;
+
 export type ReportMessageType =
-  | 'Start'
-  | 'Animal'
-  | 'Geo'
-  | 'Damage'
-  | 'Complete'
-  | 'Undefined';
+  (typeof ReportMessage)[keyof typeof ReportMessage];

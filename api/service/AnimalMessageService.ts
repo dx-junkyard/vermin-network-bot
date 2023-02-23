@@ -28,7 +28,7 @@ export function getReployFromAnimalMessage(
         actions: [
           {
             type: 'location',
-            label: '位置情報を送信する。',
+            label: '位置情報を送信する',
           },
           // {
           //   type: 'message',
