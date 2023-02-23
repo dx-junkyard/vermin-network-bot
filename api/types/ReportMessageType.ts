@@ -3,7 +3,6 @@ export const ReportMessage = {
   ANIMAL: 'animal',
   GEO: 'geo',
   DAMAGE: 'damage',
-  COMPLETE: 'complete',
   UNDEFINED: 'undefined',
 } as const;
 
