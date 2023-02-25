@@ -14,3 +14,11 @@ export const createReportLog = async (
     },
   });
 };
+
+export const findReportLog = async (reportId: number): Promise<ReportLog[]> => {
+  return await prisma.reportLog.findMany({
+    where: {
+      reportId,
+    },
+  });
+};

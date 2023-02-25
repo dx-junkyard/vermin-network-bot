@@ -10,16 +10,16 @@ import {
 } from '@line/bot-sdk';
 import dotenv from 'dotenv';
 
-import { getProcessingReport } from '../repositories/ReportRepository';
-import { getReployAnimalMessage } from '../service/AnimalMessageService';
-import { getReplyCancelMessage } from '../service/CancelMessageService';
-import { classifyReportMessageType } from '../service/ClassifyReportMessageTypeService';
-import { getReplyDamageMessage } from '../service/DamageMessageService';
-import { getReplyFinishMessage } from '../service/FinishMessageService';
-import { getReplyGeoMessage } from '../service/GeoMessageService';
-import { getReplyRetryMessage } from '../service/RetryMessageService';
-import { getReplyStartMessage } from '../service/StartMessageService';
-import { ReportMessage } from '../types/ReportMessageType';
+import { getProcessingReport } from '../../repositories/ReportRepository';
+import { getReployAnimalMessage } from '../../service/AnimalMessageService';
+import { getReplyCancelMessage } from '../../service/CancelMessageService';
+import { classifyReportMessageType } from '../../service/ClassifyReportMessageTypeService';
+import { getReplyDamageMessage } from '../../service/DamageMessageService';
+import { getReplyFinishMessage } from '../../service/FinishMessageService';
+import { getReplyGeoMessage } from '../../service/GeoMessageService';
+import { getReplyRetryMessage } from '../../service/RetryMessageService';
+import { getReplyStartMessage } from '../../service/StartMessageService';
+import { ReportMessage } from '../../types/ReportMessageType';
 
 if (process.env.NODE_ENV == 'development') {
   dotenv.config();
