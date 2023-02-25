@@ -1,6 +1,7 @@
 import { ImageEventMessage, TemplateMessage, TextMessage } from '@line/bot-sdk';
 
 import { createReportLog } from '../repositories/ReportLogRepository';
+import { completeReport } from '../repositories/ReportRepository';
 import { ReportMessage } from '../types/ReportMessageType';
 
 export async function getReplyDamageMessage(
@@ -10,6 +11,8 @@ export async function getReplyDamageMessage(
   const { id } = eventMessage;
 
   await createReportLog(reportId, ReportMessage.DAMAGE, `{"imageId", "${id}"}`);
+
+  await completeReport(reportId);
 
   return [
     {
