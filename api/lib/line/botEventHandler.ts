@@ -8,7 +8,7 @@ import {
 } from '@line/bot-sdk';
 import dotenv from 'dotenv';
 
-import { getReployFromAnimalMessage } from '../../service/AnimalMessageService';
+import { getReployAnimalMessage } from '../../service/AnimalMessageService';
 import { classifyReportMessageType } from '../../service/ClassifyReportMessageTypeService';
 import { getReplyDamageMessage } from '../../service/DamageMessageService';
 import { getReplyGeoMessage } from '../../service/GeoMessageService';
@@ -55,7 +55,7 @@ export const botEventHandler = async (
       response = getReplyStartMessage();
       break;
     case ReportMessage.ANIMAL:
-      response = getReployFromAnimalMessage(event.message as TextEventMessage);
+      response = getReployAnimalMessage(event.message as TextEventMessage);
       break;
     case ReportMessage.GEO:
       response = getReplyGeoMessage();

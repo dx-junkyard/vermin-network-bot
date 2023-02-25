@@ -6,7 +6,7 @@ import {
   getAnimalOption,
 } from '../types/AnimalOption';
 
-export function getReployFromAnimalMessage(
+export function getReployAnimalMessage(
   eventMessage: TextEventMessage
 ): (TextMessage | TemplateMessage)[] {
   const { text } = eventMessage;
