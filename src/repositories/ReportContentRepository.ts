@@ -7,11 +7,11 @@ const prisma = new PrismaClient();
 export const convertReport = async (reportId: number): Promise<Report> => {
   const reportLog = await findReportLog(reportId);
 
-  const animal = JSON.parse(getElementByType('animal', reportLog)).animal;
-  const damage = JSON.parse(getElementByType('damage', reportLog)).imageId;
-  const geo = JSON.parse(getElementByType('location', reportLog));
+  const animal = JSON.parse(getElementByType('animal', reportLog))?.animal;
+  const damage = JSON.parse(getElementByType('damage', reportLog))?.imageId;
+  const geo = JSON.parse(getElementByType('geo', reportLog));
 
-  const geomFromText = `ST_GeomFromText('POINT(${geo.latitude} ${geo.longitude})', 4326)`;
+  const geomFromText = `ST_GeomFromText('POINT(${geo?.latitude} ${geo?.longitude})', 4326)`;
 
   return await prisma.$queryRaw`INSERT INTO ReportContent (reportId, animal, content, geo) VALUES (${reportId}, ${animal}, ${damage}, ${geomFromText})`;
 };
