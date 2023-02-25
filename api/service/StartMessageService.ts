@@ -10,7 +10,8 @@ export async function getReplyStartMessage(
 ): Promise<(TextMessage | TemplateMessage)[]> {
   // レポートを初期化する
   const report = await getProcessingReport(userId);
-  if (!report) {
+
+  if (report) {
     return [
       {
         type: 'template',
@@ -35,6 +36,7 @@ export async function getReplyStartMessage(
     ];
   }
 
+  // レポートを初期化する
   await initReport(userId);
 
   return [

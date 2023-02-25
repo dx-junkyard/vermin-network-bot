@@ -17,7 +17,7 @@ export async function getReplyFinishMessage(
   return [
     {
       type: 'text',
-      text: '報告作業を完了しました。',
+      text: '報告作業を中止しました。',
     },
   ];
 }
