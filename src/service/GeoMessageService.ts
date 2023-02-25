@@ -1,6 +1,24 @@
-import { TemplateMessage, TextMessage } from '@line/bot-sdk';
+import {
+  LocationEventMessage,
+  TemplateMessage,
+  TextMessage,
+} from '@line/bot-sdk';
 
-export function getReplyGeoMessage(): (TextMessage | TemplateMessage)[] {
+import { createReportLog } from '../repositories/ReportLogRepository';
+import { ReportMessage } from '../types/ReportMessageType';
+
+export async function getReplyGeoMessage(
+  reportId: number,
+  eventMessage: LocationEventMessage
+): Promise<(TextMessage | TemplateMessage)[]> {
+  const { latitude, longitude } = eventMessage;
+
+  await createReportLog(
+    reportId,
+    ReportMessage.GEO,
+    `{"latitude", ${latitude},"longitude", ${longitude}}`
+  );
+
   return [
     {
       type: 'text',

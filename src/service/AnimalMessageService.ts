@@ -9,13 +9,14 @@ import {
 import { ReportMessage } from '../types/ReportMessageType';
 
 export async function getReployAnimalMessage(
+  reportId: number,
   eventMessage: TextEventMessage
 ): Promise<(TextMessage | TemplateMessage)[]> {
   const { text } = eventMessage;
 
   const animalOption = getAnimalOption(text);
 
-  await createReportLog(1, ReportMessage.ANIMAL, animalOption.content);
+  await createReportLog(reportId, ReportMessage.ANIMAL, animalOption.content);
 
   const animalText = getReplyText(animalOption);
 

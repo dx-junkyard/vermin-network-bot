@@ -1,6 +1,8 @@
 import {
   Client,
   ClientConfig,
+  ImageEventMessage,
+  LocationEventMessage,
   Message,
   MessageAPIResponseBase,
   TextEventMessage,
@@ -74,6 +76,7 @@ export const botEventHandler = async (
     case ReportMessage.ANIMAL:
       if (report) {
         response = await getReployAnimalMessage(
+          report.id,
           event.message as TextEventMessage
         );
       } else {
@@ -81,10 +84,24 @@ export const botEventHandler = async (
       }
       break;
     case ReportMessage.GEO:
-      response = getReplyGeoMessage();
+      if (report) {
+        response = await getReplyGeoMessage(
+          report.id,
+          event.message as LocationEventMessage
+        );
+      } else {
+        response = await getReplyRetryMessage();
+      }
       break;
     case ReportMessage.DAMAGE:
-      response = getReplyDamageMessage();
+      if (report) {
+        response = await getReplyDamageMessage(
+          report.id,
+          event.message as ImageEventMessage
+        );
+      } else {
+        response = await getReplyRetryMessage();
+      }
       break;
     case ReportMessage.FINISH:
       response = await getReplyFinishMessage(userId);
