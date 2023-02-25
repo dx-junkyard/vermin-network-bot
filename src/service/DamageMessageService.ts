@@ -7,10 +7,9 @@ export async function getReplyDamageMessage(
   reportId: number,
   eventMessage: ImageEventMessage
 ): Promise<(TextMessage | TemplateMessage)[]> {
-  const { imageSet } = eventMessage;
-  const id = imageSet?.id;
+  const { id } = eventMessage;
 
-  await createReportLog(reportId, ReportMessage.DAMAGE, `{"imageId", "${id}"`);
+  await createReportLog(reportId, ReportMessage.DAMAGE, `{"imageId", "${id}"}`);
 
   return [
     {
