@@ -30,6 +30,8 @@ model ReportContent {
   animal    String
   damage    String?
   geo       Unsupported("geometry")
+  latitude  Float
+  longitude Float
   report    Report   @relation(fields: [reportId], references: [id])
   reportId  Int @unique
 

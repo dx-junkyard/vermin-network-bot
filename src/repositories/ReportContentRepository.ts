@@ -10,10 +10,12 @@ export const convertReport = async (reportId: number): Promise<Report> => {
   const animal = JSON.parse(getElementByType('animal', reportLog))?.animal;
   const damage = JSON.parse(getElementByType('damage', reportLog))?.imageId;
   const geo = JSON.parse(getElementByType('geo', reportLog));
+  const latitude = geo?.latitude;
+  const longitude = geo?.longitude;
 
-  const geomFromText = `ST_GeomFromText('POINT(${geo?.latitude} ${geo?.longitude})', 4326)`;
+  const geomFromText = `ST_GeomFromText('POINT(${latitude} ${longitude})', 4326)`;
 
-  return await prisma.$queryRaw`INSERT INTO ReportContent (reportId, animal, content, geo) VALUES (${reportId}, ${animal}, ${damage}, ${geomFromText})`;
+  return await prisma.$queryRaw`INSERT INTO ReportContent (reportId, animal, damage, geo, latitude, longitude) VALUES (${reportId}, ${animal}, ${damage}, ${geomFromText}, ${latitude}, ${longitude})`;
 };
 
 function getElementByType(type: string, array: ReportLog[]): string {
