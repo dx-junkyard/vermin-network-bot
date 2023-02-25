@@ -40,6 +40,13 @@ export const botEventHandler = async (
       event.message.type !== 'image' &&
       event.message.type !== 'location')
   ) {
+    // FIXME: 未対応のメッセージタイプの場合に返すメッセージを検討する
+    return;
+  }
+
+  const userId = event.source.userId;
+  if (!userId) {
+    // FIXME: ユーザIDが取得できなかった場合に返すメッセージを検討する
     return;
   }
 
@@ -52,7 +59,7 @@ export const botEventHandler = async (
 
   switch (reportMessageType) {
     case ReportMessage.START:
-      response = getReplyStartMessage();
+      response = await getReplyStartMessage(userId);
       break;
     case ReportMessage.ANIMAL:
       response = getReployAnimalMessage(event.message as TextEventMessage);

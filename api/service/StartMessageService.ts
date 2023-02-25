@@ -1,6 +1,13 @@
 import { TemplateMessage, TextMessage } from '@line/bot-sdk';
 
-export function getReplyStartMessage(): (TextMessage | TemplateMessage)[] {
+import { initReport } from '../repositories/ReportRepository';
+
+export async function getReplyStartMessage(
+  userId: string
+): Promise<(TextMessage | TemplateMessage)[]> {
+  // レポートを初期化する
+  await initReport(userId);
+
   return [
     {
       type: 'text',
