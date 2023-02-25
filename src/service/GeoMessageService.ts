@@ -16,7 +16,7 @@ export async function getReplyGeoMessage(
   await createReportLog(
     reportId,
     ReportMessage.GEO,
-    `{"latitude", ${latitude},"longitude", ${longitude}}`
+    `{"latitude":${latitude},"longitude":${longitude}}`
   );
 
   return [
