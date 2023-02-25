@@ -37,7 +37,6 @@ model ReportContent {
 
 model Report {
   id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
   userId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -46,11 +45,4 @@ model Report {
   content   ReportContent?
 
   @@index([userId])
-}
-
-model User {
-  id        String   @id 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  reports   Report[]
 }

@@ -11,6 +11,7 @@ import dotenv from 'dotenv';
 import { getReployAnimalMessage } from '../../service/AnimalMessageService';
 import { classifyReportMessageType } from '../../service/ClassifyReportMessageTypeService';
 import { getReplyDamageMessage } from '../../service/DamageMessageService';
+import { getReplyFinishMessage } from '../../service/FinishMessageService';
 import { getReplyGeoMessage } from '../../service/GeoMessageService';
 import { getReplyStartMessage } from '../../service/StartMessageService';
 import { ReportMessage } from '../../types/ReportMessageType';
@@ -69,6 +70,9 @@ export const botEventHandler = async (
       break;
     case ReportMessage.DAMAGE:
       response = getReplyDamageMessage();
+      break;
+    case ReportMessage.FINISH:
+      response = await getReplyFinishMessage(userId);
       break;
     case ReportMessage.UNDEFINED:
     default:

@@ -31,3 +31,11 @@ export const initReport = async (userId: string): Promise<Report> => {
     },
   });
 };
+
+export const deleteReport = async (reportId: number): Promise<Report> => {
+  return await prisma.report.delete({
+    where: {
+      id: reportId,
+    },
+  });
+};

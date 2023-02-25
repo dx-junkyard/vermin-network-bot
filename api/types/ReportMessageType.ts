@@ -4,6 +4,8 @@ export const ReportMessage = {
   GEO: 'geo',
   DAMAGE: 'damage',
   UNDEFINED: 'undefined',
+  RETRY: 'retry',
+  FINISH: 'finish',
 } as const;
 
 export type ReportMessageType =

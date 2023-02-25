@@ -20,6 +20,10 @@ export function classifyReportMessageType(
         return ReportMessage.ANIMAL;
       case /送信しない/.test(text):
         return ReportMessage.DAMAGE;
+      case /続ける/.test(text):
+        return ReportMessage.RETRY;
+      case /終了する/.test(text):
+        return ReportMessage.FINISH;
       default:
         return ReportMessage.UNDEFINED;
     }

@@ -1,11 +1,40 @@
 import { TemplateMessage, TextMessage } from '@line/bot-sdk';
 
-import { initReport } from '../repositories/ReportRepository';
+import {
+  getProcessingReport,
+  initReport,
+} from '../repositories/ReportRepository';
 
 export async function getReplyStartMessage(
   userId: string
 ): Promise<(TextMessage | TemplateMessage)[]> {
   // レポートを初期化する
+  const report = await getProcessingReport(userId);
+  if (!report) {
+    return [
+      {
+        type: 'template',
+        altText: 'レポート完了メッセージ',
+        template: {
+          type: 'confirm',
+          text: 'すでに報告を受け付けています。報告を終了しますか？',
+          actions: [
+            {
+              type: 'message',
+              label: '終了する',
+              text: '終了する',
+            },
+            {
+              type: 'message',
+              label: '続ける',
+              text: '続ける',
+            },
+          ],
+        },
+      },
+    ];
+  }
+
   await initReport(userId);
 
   return [
