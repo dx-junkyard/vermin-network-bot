@@ -14,6 +14,7 @@ export const convertReport = async (reportId: number): Promise<Report> => {
   const longitude = geo?.longitude;
 
   const geomFromText = `ST_GeomFromText('POINT(${latitude} ${longitude}'), 4326)`;
+  console.info(geomFromText);
 
   return await prisma.$queryRaw`INSERT INTO ReportContent (reportId, animal, damage, geo, latitude, longitude) VALUES (${reportId}, ${animal}, ${damage}, ${geomFromText}, ${latitude}, ${longitude})`;
 };
