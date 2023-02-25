@@ -15,6 +15,7 @@ model ReportLog {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  type      String
   content   String
   report    Report   @relation(fields: [reportId], references: [id])
   reportId  Int

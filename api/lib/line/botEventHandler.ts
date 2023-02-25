@@ -8,11 +8,14 @@ import {
 } from '@line/bot-sdk';
 import dotenv from 'dotenv';
 
+import { getProcessingReport } from '../../repositories/ReportRepository';
 import { getReployAnimalMessage } from '../../service/AnimalMessageService';
+import { getReplyCancelMessage } from '../../service/CancelMessageService';
 import { classifyReportMessageType } from '../../service/ClassifyReportMessageTypeService';
 import { getReplyDamageMessage } from '../../service/DamageMessageService';
 import { getReplyFinishMessage } from '../../service/FinishMessageService';
 import { getReplyGeoMessage } from '../../service/GeoMessageService';
+import { getReplyRetryMessage } from '../../service/RetryMessageService';
 import { getReplyStartMessage } from '../../service/StartMessageService';
 import { ReportMessage } from '../../types/ReportMessageType';
 
@@ -54,16 +57,28 @@ export const botEventHandler = async (
   // Process all message related variables here.
   const { replyToken } = event;
 
+  // 処理中のレポートを取得する
+  const report = await getProcessingReport(userId);
   const reportMessageType = classifyReportMessageType(event.message);
 
   let response: Message | Message[];
 
   switch (reportMessageType) {
     case ReportMessage.START:
-      response = await getReplyStartMessage(userId);
+      if (report) {
+        response = await getReplyCancelMessage();
+      } else {
+        response = await getReplyStartMessage(userId);
+      }
       break;
     case ReportMessage.ANIMAL:
-      response = getReployAnimalMessage(event.message as TextEventMessage);
+      if (report) {
+        response = await getReployAnimalMessage(
+          event.message as TextEventMessage
+        );
+      } else {
+        response = await getReplyRetryMessage();
+      }
       break;
     case ReportMessage.GEO:
       response = getReplyGeoMessage();

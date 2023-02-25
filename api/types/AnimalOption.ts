@@ -1,15 +1,19 @@
 export const AnimalOption = {
   BOAR: {
     option: 'イノシシ',
+    content: '{"animal": "boar"}',
   },
   DEER: {
     option: 'シカ',
+    content: '{"animal": "deer"}',
   },
   MONKEY: {
     option: 'サル',
+    content: '{"animal": "monkey"}',
   },
   OTHER: {
     option: 'その他、わからない',
+    content: '{"animal": "other"}',
   },
 } as const;
 
