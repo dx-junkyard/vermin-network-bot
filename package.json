@@ -11,7 +11,7 @@
     "start": "node ./dist/index.js",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "format": "prettier --write 'api/**/*.{js,ts,json}'",
+    "format": "prettier --write './**/*.{js,ts,json}'",
     "prepare": "husky install"
   },
   "license": "MIT",
