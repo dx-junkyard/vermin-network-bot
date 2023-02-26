@@ -1,4 +1,4 @@
-import { ImageEventMessage, TemplateMessage, TextMessage } from '@line/bot-sdk';
+import { TemplateMessage, TextMessage } from '@line/bot-sdk';
 
 import { createContentReport } from '../repositories/ReportContentRepository';
 import { createReportLog } from '../repositories/ReportLogRepository';
@@ -7,11 +7,11 @@ import { ReportMessage } from '../types/ReportMessageType';
 
 export async function getReplyDamageMessage(
   reportId: number,
-  eventMessage: ImageEventMessage
+  imageId: string | null
 ): Promise<(TextMessage | TemplateMessage)[]> {
-  const { id } = eventMessage;
+  const content = imageId ? `{"imageId":"${imageId}"}` : `{"imageId": null}`;
 
-  await createReportLog(reportId, ReportMessage.DAMAGE, `{"imageId":"${id}"}`);
+  await createReportLog(reportId, ReportMessage.DAMAGE, content);
 
   await completeReport(reportId);
 
