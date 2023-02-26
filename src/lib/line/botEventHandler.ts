@@ -94,8 +94,10 @@ export const botEventHandler = async (
       break;
     case ReportMessage.DAMAGE:
       if (report) {
-        const id = event.message.id;
-        response = await getReplyDamageMessage(report.id, id ? id : null);
+        response = await getReplyDamageMessage(
+          report.id,
+          event.message.type === 'image' ? event.message.id : null
+        );
       } else {
         response = await getReplyRetryMessage();
       }

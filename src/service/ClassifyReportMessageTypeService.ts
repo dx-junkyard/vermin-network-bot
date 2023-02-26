@@ -10,7 +10,7 @@ import { ReportMessage, ReportMessageType } from '../types/ReportMessageType';
 export function classifyReportMessageType(
   eventMessage: TextEventMessage | ImageEventMessage | LocationEventMessage
 ): ReportMessageType {
-  if (eventMessage.type == 'text') {
+  if (eventMessage.type === 'text') {
     const { text } = eventMessage;
     // FIXME: メッセージをグローバルに管理
     switch (true) {
@@ -27,9 +27,9 @@ export function classifyReportMessageType(
       default:
         return ReportMessage.UNDEFINED;
     }
-  } else if (eventMessage.type == 'image') {
+  } else if (eventMessage.type === 'image') {
     return ReportMessage.DAMAGE;
-  } else if (eventMessage.type == 'location') {
+  } else if (eventMessage.type === 'location') {
     return ReportMessage.GEO;
   }
 
