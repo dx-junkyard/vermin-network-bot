@@ -1,7 +1,6 @@
 import {
   Client,
   ClientConfig,
-  ImageEventMessage,
   LocationEventMessage,
   Message,
   MessageAPIResponseBase,
@@ -95,10 +94,8 @@ export const botEventHandler = async (
       break;
     case ReportMessage.DAMAGE:
       if (report) {
-        response = await getReplyDamageMessage(
-          report.id,
-          event.message as ImageEventMessage
-        );
+        const id = event.message.id;
+        response = await getReplyDamageMessage(report.id, id ? id : null);
       } else {
         response = await getReplyRetryMessage();
       }
