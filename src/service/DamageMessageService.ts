@@ -1,6 +1,6 @@
 import { ImageEventMessage, TemplateMessage, TextMessage } from '@line/bot-sdk';
 
-import { convertReport } from '../repositories/ReportContentRepository';
+import { createContentReport } from '../repositories/ReportContentRepository';
 import { createReportLog } from '../repositories/ReportLogRepository';
 import { completeReport } from '../repositories/ReportRepository';
 import { ReportMessage } from '../types/ReportMessageType';
@@ -15,7 +15,7 @@ export async function getReplyDamageMessage(
 
   await completeReport(reportId);
 
-  await convertReport(reportId);
+  await createContentReport(reportId);
 
   return [
     {

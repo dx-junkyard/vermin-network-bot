@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import express, { Application, Request, Response } from 'express';
 
 import { botEventHandler } from '../src/lib/line/botEventHandler';
+import { getReportContentList } from '../src/repositories/ReportContentRepository';
 
 if (process.env.NODE_ENV == 'development') {
   dotenv.config();
@@ -34,6 +35,32 @@ app.get(basePath, async (_: Request, res: Response): Promise<Response> => {
     message: 'Connected successfully!',
   });
 });
+
+app.get(
+  `${basePath}/report/list`,
+  async (req: Request, res: Response): Promise<Response> => {
+    const { from, to } = req.query;
+
+    const reportContentList = await getReportContentList(
+      from ? toDate(from as string) : undefined,
+      to ? toDate(to as string) : undefined
+    );
+
+    return res.status(200).json({
+      status: 'success',
+      reports: reportContentList,
+    });
+  }
+);
+
+const toDate = (dateString: string): Date => {
+  return new Date(
+    `${dateString.substring(0, 4)}-${dateString.substring(
+      4,
+      6
+    )}-${dateString.substring(6, 8)}`
+  );
+};
 
 // This route is used for the Webhook.
 app.post(
