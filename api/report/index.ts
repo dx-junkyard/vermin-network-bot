@@ -25,8 +25,17 @@ app.get(
       to ? toDate(to as string) : undefined
     );
 
+    const reportContentListReponse = reportContentList.map((report) => {
+      return {
+        animal: report.animal,
+        latitude: report.latitude,
+        longitude: report.longitude,
+        createdAt: report.createdAt,
+      };
+    });
+
     return res.status(200).json({
-      reports: reportContentList,
+      reports: reportContentListReponse,
     });
   }
 );
