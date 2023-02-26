@@ -3,3 +3,4 @@ package.json
 .*
 public
 docs
+prisma/schema.prisma

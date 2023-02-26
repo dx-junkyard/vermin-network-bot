@@ -1,6 +1,8 @@
 import {
   Client,
   ClientConfig,
+  ImageEventMessage,
+  LocationEventMessage,
   Message,
   MessageAPIResponseBase,
   TextEventMessage,
@@ -8,10 +10,14 @@ import {
 } from '@line/bot-sdk';
 import dotenv from 'dotenv';
 
-import { getReployFromAnimalMessage } from '../../service/AnimalMessageService';
+import { getProcessingReport } from '../../repositories/ReportRepository';
+import { getReployAnimalMessage } from '../../service/AnimalMessageService';
+import { getReplyCancelMessage } from '../../service/CancelMessageService';
 import { classifyReportMessageType } from '../../service/ClassifyReportMessageTypeService';
 import { getReplyDamageMessage } from '../../service/DamageMessageService';
+import { getReplyFinishMessage } from '../../service/FinishMessageService';
 import { getReplyGeoMessage } from '../../service/GeoMessageService';
+import { getReplyRetryMessage } from '../../service/RetryMessageService';
 import { getReplyStartMessage } from '../../service/StartMessageService';
 import { ReportMessage } from '../../types/ReportMessageType';
 
@@ -40,28 +46,65 @@ export const botEventHandler = async (
       event.message.type !== 'image' &&
       event.message.type !== 'location')
   ) {
+    // FIXME: 未対応のメッセージタイプの場合に返すメッセージを検討する
+    return;
+  }
+
+  const userId = event.source.userId;
+  if (!userId) {
+    // FIXME: ユーザIDが取得できなかった場合に返すメッセージを検討する
     return;
   }
 
   // Process all message related variables here.
   const { replyToken } = event;
 
+  // 処理中のレポートを取得する
+  const report = await getProcessingReport(userId);
   const reportMessageType = classifyReportMessageType(event.message);
 
   let response: Message | Message[];
 
   switch (reportMessageType) {
     case ReportMessage.START:
-      response = getReplyStartMessage();
+      if (report) {
+        response = await getReplyCancelMessage();
+      } else {
+        response = await getReplyStartMessage(userId);
+      }
       break;
     case ReportMessage.ANIMAL:
-      response = getReployFromAnimalMessage(event.message as TextEventMessage);
+      if (report) {
+        response = await getReployAnimalMessage(
+          report.id,
+          event.message as TextEventMessage
+        );
+      } else {
+        response = await getReplyRetryMessage();
+      }
       break;
     case ReportMessage.GEO:
-      response = getReplyGeoMessage();
+      if (report) {
+        response = await getReplyGeoMessage(
+          report.id,
+          event.message as LocationEventMessage
+        );
+      } else {
+        response = await getReplyRetryMessage();
+      }
       break;
     case ReportMessage.DAMAGE:
-      response = getReplyDamageMessage();
+      if (report) {
+        response = await getReplyDamageMessage(
+          report.id,
+          event.message as ImageEventMessage
+        );
+      } else {
+        response = await getReplyRetryMessage();
+      }
+      break;
+    case ReportMessage.FINISH:
+      response = await getReplyFinishMessage(userId);
       break;
     case ReportMessage.UNDEFINED:
     default:

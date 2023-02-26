@@ -3,7 +3,8 @@ import { middleware, MiddlewareConfig, WebhookEvent } from '@line/bot-sdk';
 import dotenv from 'dotenv';
 import express, { Application, Request, Response } from 'express';
 
-import { botEventHandler } from './lib/line/botEventHandler';
+import { botEventHandler } from '../src/lib/line/botEventHandler';
+import { getReportContentList } from '../src/repositories/ReportContentRepository';
 
 if (process.env.NODE_ENV == 'development') {
   dotenv.config();
@@ -22,18 +23,39 @@ const app: Application = express();
 
 const basePath = '/api';
 
-// Register the LINE middleware.
-// As an alternative, you could also pass the middleware in the route handler, which is what is used here.
-// app.use(middleware(middlewareConfig));
+app.get(
+  `${basePath}/report/list`,
+  async (req: Request, res: Response): Promise<Response> => {
+    const { from, to } = req.query;
 
-// Route handler to receive webhook events.
-// This route is used to receive connection tests.
-app.get(basePath, async (_: Request, res: Response): Promise<Response> => {
-  return res.status(200).json({
-    status: 'success',
-    message: 'Connected successfully!',
-  });
-});
+    const reportContentList = await getReportContentList(
+      from ? toDate(from as string) : undefined,
+      to ? toDate(to as string) : undefined
+    );
+
+    const reportContentListReponse = reportContentList.map((report) => {
+      return {
+        animal: report.animal,
+        latitude: report.latitude,
+        longitude: report.longitude,
+        createdAt: report.createdAt,
+      };
+    });
+
+    return res.status(200).json({
+      reports: reportContentListReponse,
+    });
+  }
+);
+
+const toDate = (dateString: string): Date => {
+  return new Date(
+    `${dateString.substring(0, 4)}-${dateString.substring(
+      4,
+      6
+    )}-${dateString.substring(6, 8)}`
+  );
+};
 
 // This route is used for the Webhook.
 app.post(

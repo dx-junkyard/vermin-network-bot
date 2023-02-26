@@ -1,17 +1,23 @@
 import { TemplateMessage, TextEventMessage, TextMessage } from '@line/bot-sdk';
 
+import { createReportLog } from '../repositories/ReportLogRepository';
 import {
   AnimalOption,
   AnimalOptionType,
   getAnimalOption,
 } from '../types/AnimalOption';
+import { ReportMessage } from '../types/ReportMessageType';
 
-export function getReployFromAnimalMessage(
+export async function getReployAnimalMessage(
+  reportId: number,
   eventMessage: TextEventMessage
-): (TextMessage | TemplateMessage)[] {
+): Promise<(TextMessage | TemplateMessage)[]> {
   const { text } = eventMessage;
 
   const animalOption = getAnimalOption(text);
+
+  await createReportLog(reportId, ReportMessage.ANIMAL, animalOption.content);
+
   const animalText = getReplyText(animalOption);
 
   return [
