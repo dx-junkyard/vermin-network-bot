@@ -3,8 +3,8 @@ import { middleware, MiddlewareConfig, WebhookEvent } from '@line/bot-sdk';
 import dotenv from 'dotenv';
 import express, { Application, Request, Response } from 'express';
 
-import { botEventHandler } from '../lib/line/botEventHandler';
-import { getReportContentList } from '../repositories/ReportContentRepository';
+import { botEventHandler } from './lib/line/botEventHandler';
+import { getReportContentList } from './repositories/ReportContentRepository';
 
 if (process.env.NODE_ENV == 'development') {
   dotenv.config();
