@@ -115,7 +115,7 @@ export const botEventHandler = async (
     await createReportLog(
       report.id,
       ReportMessage.ANIMAL,
-      getAnimalOption((event.message as TextEventMessage).text).option,
+      getAnimalOption((event.message as TextEventMessage).text).content,
       ReportMessage.GEO
     );
 
