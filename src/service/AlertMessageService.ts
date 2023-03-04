@@ -10,7 +10,7 @@ export const getAlertMessage = async (
     .map((report) => {
       return `${report.address}で${
         getAnimalOptionByKeyword(report.animal).title
-      }の被害が発生しました。`;
+      }が発生しました。`;
     })
     .join('\n\n');
 

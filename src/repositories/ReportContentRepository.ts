@@ -81,6 +81,7 @@ export const getUnnotifiedReportContent = async (): Promise<
     where: {
       report: {
         isNotified: false,
+        isCompleted: true,
       },
     },
     // 更新日時が最新のレポートを取得
