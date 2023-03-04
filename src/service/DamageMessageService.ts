@@ -5,26 +5,35 @@ import { createReportLog } from '../repositories/ReportLogRepository';
 import { completeReport } from '../repositories/ReportRepository';
 import { ReportMessage } from '../types/ReportMessageType';
 
-export async function getReplyDamageMessage(
-  reportId: number,
-  imageId: string | null
-): Promise<(TextMessage | TemplateMessage)[]> {
-  const content = imageId ? `{"imageId":"${imageId}"}` : `{"imageId": null}`;
-
-  await createReportLog(reportId, ReportMessage.DAMAGE, content);
-
-  await completeReport(reportId);
-
-  await createContentReport(reportId);
-
-  return [
-    {
-      type: 'text',
-      text: '被害報告を承りました。\nご報告ありがとうございました。',
+export const getDamageMessage = (): TemplateMessage => {
+  return {
+    type: 'template',
+    altText: '被害状況の撮影',
+    template: {
+      type: 'buttons',
+      text: '被害の状況写真をお持ちでしたら、送信していただけないでしょうか。',
+      actions: [
+        {
+          type: 'cameraRoll',
+          label: 'カメラロールから選択する',
+        },
+        {
+          type: 'camera',
+          label: 'カメラから撮影する',
+        },
+        {
+          type: 'message',
+          label: '送信しない',
+          text: '送信しない',
+        },
+      ],
     },
-    {
-      type: 'text',
-      text: '周辺にお住まいの方にもご注意いただくため、今回の被害発生についてLINE登録の皆様にお知らせします。\nまた今後、役場より周辺のパトロールを行います。\n通報にご協力いただきありがとうございました。',
-    },
-  ];
+  };
+};
+
+export async function getReplyDamageMessage(): Promise<TextMessage> {
+  return {
+    type: 'text',
+    text: '被害報告を承りました。\nご報告ありがとうございました。',
+  };
 }

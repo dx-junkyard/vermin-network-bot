@@ -1,51 +1,29 @@
-import { TemplateMessage, TextEventMessage, TextMessage } from '@line/bot-sdk';
+import { TemplateMessage, TextMessage } from '@line/bot-sdk';
 
-import { createReportLog } from '../repositories/ReportLogRepository';
 import {
   AnimalOption,
   AnimalOptionType,
   getAnimalOption,
 } from '../types/AnimalOption';
-import { ReportMessage } from '../types/ReportMessageType';
 
-export async function getReployAnimalMessage(
-  reportId: number,
-  eventMessage: TextEventMessage
-): Promise<(TextMessage | TemplateMessage)[]> {
-  const { text } = eventMessage;
-
+/**
+ * 害獣の選択肢メッセージに対する返信を取得する
+ *
+ * @param reportId 通報ID
+ * @param eventMessage
+ * @returns
+ */
+export const getReployAnimalMessage = async (
+  text: string
+): Promise<TextMessage> => {
   const animalOption = getAnimalOption(text);
-
-  await createReportLog(reportId, ReportMessage.ANIMAL, animalOption.content);
-
   const animalText = getReplyText(animalOption);
 
-  return [
-    {
-      type: 'text',
-      text: animalText,
-    },
-    {
-      type: 'template',
-      altText: '位置情報',
-      template: {
-        type: 'buttons',
-        text: '被害を受けた場所の位置情報を地図から選択してください。',
-        actions: [
-          {
-            type: 'location',
-            label: '位置情報を送信する',
-          },
-          // {
-          //   type: 'message',
-          //   label: '位置情報送らない',
-          //   text: '位置情報送らない',
-          // },
-        ],
-      },
-    },
-  ];
-}
+  return {
+    type: 'text',
+    text: animalText,
+  };
+};
 
 const getReplyText = (animalOption: AnimalOptionType): string => {
   switch (animalOption) {
@@ -57,4 +35,37 @@ const getReplyText = (animalOption: AnimalOptionType): string => {
     default:
       return '害獣は不明として承りました。';
   }
+};
+
+export const getAnimalOptionMessage = (): TemplateMessage => {
+  return {
+    type: 'template',
+    altText: 'どの動物の被害をうけましたか？',
+    template: {
+      type: 'buttons',
+      text: 'どの動物の被害をうけましたか？',
+      actions: [
+        {
+          type: 'message',
+          label: AnimalOption.BOAR.option,
+          text: AnimalOption.BOAR.option,
+        },
+        {
+          type: 'message',
+          label: AnimalOption.DEER.option,
+          text: AnimalOption.DEER.option,
+        },
+        {
+          type: 'message',
+          label: AnimalOption.MONKEY.option,
+          text: AnimalOption.MONKEY.option,
+        },
+        {
+          type: 'message',
+          label: AnimalOption.OTHER.option,
+          text: AnimalOption.OTHER.option,
+        },
+      ],
+    },
+  };
 };

@@ -1,37 +1,50 @@
-import {
-  ImageEventMessage,
-  LocationEventMessage,
-  TextEventMessage,
-} from '@line/bot-sdk';
+import { EventMessage } from '@line/bot-sdk';
+import { Report, ReportLog } from '@prisma/client';
 
 import { ReportMessage, ReportMessageType } from '../types/ReportMessageType';
 
 // FIXME: 直前の投稿済みメッセージを判定条件に追加する
 export function classifyReportMessageType(
-  eventMessage: TextEventMessage | ImageEventMessage | LocationEventMessage
+  report: Report | null,
+  log: ReportLog | null,
+  eventMessage: EventMessage
 ): ReportMessageType {
-  if (eventMessage.type === 'text') {
-    const { text } = eventMessage;
-    // FIXME: メッセージをグローバルに管理
-    switch (true) {
-      case /通報をはじめる/.test(text):
-        return ReportMessage.START;
-      case /イノシシ|シカ|サル|その他、わからない/.test(text):
-        return ReportMessage.ANIMAL;
-      case /送信しない/.test(text):
-        return ReportMessage.DAMAGE;
-      case /続ける/.test(text):
-        return ReportMessage.RETRY;
-      case /終了する/.test(text):
-        return ReportMessage.FINISH;
-      default:
-        return ReportMessage.UNDEFINED;
-    }
-  } else if (eventMessage.type === 'image') {
-    return ReportMessage.DAMAGE;
-  } else if (eventMessage.type === 'location') {
-    return ReportMessage.GEO;
+  switch (true) {
+    // 報告が存在せず、通報開始メッセージが送られた場合は、通報を開始する
+    case !report &&
+      eventMessage.type === 'text' &&
+      /通報をはじめる/.test(eventMessage.text):
+      return ReportMessage.START;
+    case report &&
+      eventMessage.type === 'text' &&
+      log &&
+      log.nextScheduledType === ReportMessage.ANIMAL &&
+      /サル|イノシシ|シカ|その他、わからない/.test(eventMessage.text):
+      return ReportMessage.ANIMAL;
+    case report &&
+      eventMessage.type === 'location' &&
+      log &&
+      log.nextScheduledType === ReportMessage.GEO:
+      return ReportMessage.GEO;
+    case report &&
+      eventMessage.type === 'image' &&
+      log &&
+      log.nextScheduledType === ReportMessage.DAMAGE:
+      return ReportMessage.DAMAGE;
+    case eventMessage.type === 'text' &&
+      log &&
+      /通報を中断する/.test(eventMessage.text):
+      return ReportMessage.FINISH;
+    // 通報再開メッセージが送られた場合は、通報を再開する
+    case eventMessage.type === 'text' &&
+      log &&
+      /再開する/.test(eventMessage.text):
+      return (
+        // 予約済みのメッセージ種別があれば、それを返す
+        // なければ、通報開始メッセージを返す
+        (log?.nextScheduledType as ReportMessageType) || ReportMessage.START
+      );
+    default:
+      return ReportMessage.UNDEFINED;
   }
-
-  return ReportMessage.UNDEFINED;
 }

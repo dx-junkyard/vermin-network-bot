@@ -1,6 +1,7 @@
 import {
   Client,
   ClientConfig,
+  EventMessage,
   LocationEventMessage,
   Message,
   MessageAPIResponseBase,
@@ -9,15 +10,34 @@ import {
 } from '@line/bot-sdk';
 import dotenv from 'dotenv';
 
-import { getProcessingReport } from '../../repositories/ReportRepository';
-import { getReployAnimalMessage } from '../../service/AnimalMessageService';
-import { getReplyCancelMessage } from '../../service/CancelMessageService';
+import { createContentReport } from '../../repositories/ReportContentRepository';
+import {
+  createReportLog,
+  getLatestLog,
+} from '../../repositories/ReportLogRepository';
+import {
+  completeReport,
+  deleteReport,
+  getProcessingReport,
+  initReport,
+} from '../../repositories/ReportRepository';
+import {
+  getAnimalOptionMessage,
+  getReployAnimalMessage,
+} from '../../service/AnimalMessageService';
 import { classifyReportMessageType } from '../../service/ClassifyReportMessageTypeService';
-import { getReplyDamageMessage } from '../../service/DamageMessageService';
+import {
+  getDamageMessage,
+  getReplyDamageMessage,
+} from '../../service/DamageMessageService';
 import { getReplyFinishMessage } from '../../service/FinishMessageService';
-import { getReplyGeoMessage } from '../../service/GeoMessageService';
-import { getReplyRetryMessage } from '../../service/RetryMessageService';
+import {
+  getGeoMessage,
+  getReplyGeoMessage,
+} from '../../service/GeoMessageService';
 import { getReplyStartMessage } from '../../service/StartMessageService';
+import { getReplyUnknownMessage } from '../../service/UnknownMessageService';
+import { getAnimalOption } from '../../types/AnimalOption';
 import { ReportMessage } from '../../types/ReportMessageType';
 
 if (process.env.NODE_ENV == 'development') {
@@ -37,81 +57,117 @@ export const lineClient = new Client(clientConfig);
 export const botEventHandler = async (
   event: WebhookEvent
 ): Promise<MessageAPIResponseBase | undefined> => {
-  // Process all variables here.
-  if (
-    event.type !== 'message' ||
-    // FIXME: 条件を簡潔に実装する
-    (event.message.type !== 'text' &&
-      event.message.type !== 'image' &&
-      event.message.type !== 'location')
-  ) {
-    // FIXME: 未対応のメッセージタイプの場合に返すメッセージを検討する
+  const isMessageEvent = event.type === 'message';
+
+  // メッセージイベントでない場合は、何もしない
+  if (!isMessageEvent) {
     return;
   }
 
+  // 受付可能なメッセージ種別を取得する
+  const isAcceptableMessageType =
+    event.message.type === 'text' ||
+    event.message.type === 'image' ||
+    event.message.type === 'location';
+
+  // 受付可能なメッセージ種別でない場合は、専用メッセージで返信する
+  if (!isAcceptableMessageType) {
+    const { replyToken } = event;
+    const unknownMessage = await getReplyUnknownMessage();
+    return await lineClient.replyMessage(replyToken, unknownMessage);
+  }
+
+  // ユーザーIDを取得する
   const userId = event.source.userId;
-  if (!userId) {
-    // FIXME: ユーザIDが取得できなかった場合に返すメッセージを検討する
-    return;
-  }
 
-  // Process all message related variables here.
-  const { replyToken } = event;
+  // ユーザーIDが取得できない場合は、専用メッセージで返信する
+  if (!userId) {
+    const { replyToken } = event;
+    const unknownMessage = await getReplyUnknownMessage();
+    return await lineClient.replyMessage(replyToken, unknownMessage);
+  }
 
   // 処理中のレポートを取得する
   const report = await getProcessingReport(userId);
-  const reportMessageType = classifyReportMessageType(event.message);
+  const log = report ? await getLatestLog(report.id) : null;
+
+  // メッセージ種別を判定する
+  const reportMessageType = classifyReportMessageType(
+    report,
+    log,
+    event.message as EventMessage
+  );
 
   let response: Message | Message[];
 
-  switch (reportMessageType) {
-    case ReportMessage.START:
-      if (report) {
-        response = await getReplyCancelMessage();
-      } else {
-        response = await getReplyStartMessage(userId);
-      }
-      break;
-    case ReportMessage.ANIMAL:
-      if (report) {
-        response = await getReployAnimalMessage(
-          report.id,
-          event.message as TextEventMessage
-        );
-      } else {
-        response = await getReplyRetryMessage();
-      }
-      break;
-    case ReportMessage.GEO:
-      if (report) {
-        response = await getReplyGeoMessage(
-          report.id,
-          event.message as LocationEventMessage
-        );
-      } else {
-        response = await getReplyRetryMessage();
-      }
-      break;
-    case ReportMessage.DAMAGE:
-      if (report) {
-        response = await getReplyDamageMessage(
-          report.id,
-          event.message.type === 'image' ? event.message.id : null
-        );
-      } else {
-        response = await getReplyRetryMessage();
-      }
-      break;
-    case ReportMessage.FINISH:
-      response = await getReplyFinishMessage(userId);
-      break;
-    case ReportMessage.UNDEFINED:
-    default:
-      response = {
+  if (reportMessageType === ReportMessage.START) {
+    // 報告を初期化する
+    const initialReport = await initReport(userId);
+    await createReportLog(
+      initialReport.id,
+      ReportMessage.START,
+      '{}',
+      ReportMessage.ANIMAL
+    );
+    // メッセージを結合する
+    response = [getReplyStartMessage(), getAnimalOptionMessage()];
+  } else if (reportMessageType === ReportMessage.ANIMAL && report) {
+    await createReportLog(
+      report.id,
+      ReportMessage.ANIMAL,
+      getAnimalOption((event.message as TextEventMessage).text).option,
+      ReportMessage.GEO
+    );
+
+    response = [
+      await getReployAnimalMessage((event.message as TextEventMessage).text),
+      getGeoMessage(),
+    ];
+  } else if (reportMessageType === ReportMessage.GEO && report) {
+    const { latitude, longitude } = event.message as LocationEventMessage;
+
+    await createReportLog(
+      report.id,
+      ReportMessage.GEO,
+      `{"latitude":${latitude},"longitude":${longitude}}`,
+      ReportMessage.DAMAGE
+    );
+
+    response = [await getReplyGeoMessage(), getDamageMessage()];
+  } else if (reportMessageType === ReportMessage.DAMAGE && report) {
+    const imageId = event.message.type === 'image' ? event.message.id : null;
+    const content = imageId ? `{"imageId":"${imageId}"}` : `{"imageId": null}`;
+
+    await createReportLog(
+      report.id,
+      ReportMessage.DAMAGE,
+      content,
+      ReportMessage.FINISH
+    );
+
+    await completeReport(report.id);
+
+    await createContentReport(report.id);
+
+    response = [
+      await getReplyDamageMessage(),
+      {
         type: 'text',
-        // FIXME: 入力が分類できなかった場合のメッセージを検討する
-        text: '申し訳ありません。入力を受け付けることができませんでした。',
-      };
+        text: '周辺にお住まいの方にもご注意いただくため、今回の被害発生についてLINE登録の皆様にお知らせします。\nまた今後、役場より周辺のパトロールを行います。\n通報にご協力いただきありがとうございました。',
+      },
+    ];
+  } else if (reportMessageType === ReportMessage.FINISH) {
+    const report = await getProcessingReport(userId);
+
+    if (report) {
+      await deleteReport(report.id);
+    }
+    response = await getReplyFinishMessage();
+  } else {
+    response = await getReplyUnknownMessage();
   }
-  await lineClient.replyMessage(replyToken, response);
+
+  const { replyToken } = event;
+
+  return await lineClient.replyMessage(replyToken, response);
 };
