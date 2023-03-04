@@ -6,46 +6,47 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
 model ReportLog {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  type      String
-  content   String
-  report    Report   @relation(fields: [reportId], references: [id])
-  reportId  Int
+  id                Int      @id @default(autoincrement())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  type              String
+  nextScheduledType String
+  content           String
+  report            Report   @relation(fields: [reportId], references: [id])
+  reportId          Int
 
   @@index([reportId])
 }
 
 model ReportContent {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        Int                     @id @default(autoincrement())
+  createdAt DateTime                @default(now())
+  updatedAt DateTime                @updatedAt
   animal    String
   damage    String?
   geo       Unsupported("geometry")
   latitude  Float
   longitude Float
-  report    Report   @relation(fields: [reportId], references: [id])
-  reportId  Int @unique
+  report    Report                  @relation(fields: [reportId], references: [id])
+  reportId  Int                     @unique
 
   @@index([reportId])
 }
 
 model Report {
-  id        Int      @id @default(autoincrement())
-  userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  isCompleted Boolean @default(false)
-  logs      ReportLog[]
-  content   ReportContent?
+  id          Int            @id @default(autoincrement())
+  userId      String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  isCompleted Boolean        @default(false)
+  logs        ReportLog[]
+  content     ReportContent?
 
   @@index([userId])
 }

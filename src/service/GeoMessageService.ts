@@ -1,51 +1,30 @@
-import {
-  LocationEventMessage,
-  TemplateMessage,
-  TextMessage,
-} from '@line/bot-sdk';
+import { TemplateMessage, TextMessage } from '@line/bot-sdk';
 
-import { createReportLog } from '../repositories/ReportLogRepository';
-import { ReportMessage } from '../types/ReportMessageType';
-
-export async function getReplyGeoMessage(
-  reportId: number,
-  eventMessage: LocationEventMessage
-): Promise<(TextMessage | TemplateMessage)[]> {
-  const { latitude, longitude } = eventMessage;
-
-  await createReportLog(
-    reportId,
-    ReportMessage.GEO,
-    `{"latitude":${latitude},"longitude":${longitude}}`
-  );
-
-  return [
-    {
-      type: 'text',
-      text: '位置情報を承りました。',
+export const getGeoMessage = (): TemplateMessage => {
+  return {
+    type: 'template',
+    altText: '位置情報',
+    template: {
+      type: 'buttons',
+      text: '被害を受けた場所の位置情報を地図から選択してください。',
+      actions: [
+        {
+          type: 'location',
+          label: '位置情報を送信する',
+        },
+        // {
+        //   type: 'message',
+        //   label: '位置情報送らない',
+        //   text: '位置情報送らない',
+        // },
+      ],
     },
-    {
-      type: 'template',
-      altText: '被害状況の撮影',
-      template: {
-        type: 'buttons',
-        text: '被害の状況写真をお持ちでしたら、送信していただけないでしょうか。',
-        actions: [
-          {
-            type: 'cameraRoll',
-            label: 'カメラロールから選択する',
-          },
-          {
-            type: 'camera',
-            label: 'カメラから撮影する',
-          },
-          {
-            type: 'message',
-            label: '送信しない',
-            text: '送信しない',
-          },
-        ],
-      },
-    },
-  ];
+  };
+};
+
+export async function getReplyGeoMessage(): Promise<TextMessage> {
+  return {
+    type: 'text',
+    text: '位置情報を承りました。',
+  };
 }

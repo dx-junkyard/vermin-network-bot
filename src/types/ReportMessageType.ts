@@ -10,3 +10,9 @@ export const ReportMessage = {
 
 export type ReportMessageType =
   (typeof ReportMessage)[keyof typeof ReportMessage];
+
+export const convertReportMessageType = (type: string) => {
+  return (
+    ReportMessage[type as keyof typeof ReportMessage] || ReportMessage.UNDEFINED
+  );
+};
