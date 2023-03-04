@@ -169,8 +169,6 @@ export const botEventHandler = async (
         console.error(error);
         // エラーメッセージをユーザーに送信するなどの処理
       }
-      const image = await lineClient.getMessageContent(imageId);
-      await uploadImage(imageId, image);
     }
 
     await createReportLog(
