@@ -38,6 +38,7 @@ app.get(
         animal: report.animal,
         latitude: report.latitude,
         longitude: report.longitude,
+        address: report.address || null,
         createdAt: convertUTCtoJST(report.createdAt),
       };
     });

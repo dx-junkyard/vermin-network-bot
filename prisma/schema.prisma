@@ -33,6 +33,7 @@ model ReportContent {
   geo       Unsupported("geometry")
   latitude  Float
   longitude Float
+  address   String
   report    Report                  @relation(fields: [reportId], references: [id])
   reportId  Int                     @unique
 
