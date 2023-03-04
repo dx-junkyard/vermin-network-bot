@@ -27,7 +27,9 @@ export function classifyReportMessageType(
       log.nextScheduledType === ReportMessage.GEO:
       return ReportMessage.GEO;
     case report &&
-      eventMessage.type === 'image' &&
+      (eventMessage.type === 'image' ||
+        (eventMessage.type === 'text' &&
+          /送信しない/.test(eventMessage.text))) &&
       log &&
       log.nextScheduledType === ReportMessage.DAMAGE:
       return ReportMessage.DAMAGE;
