@@ -18,15 +18,17 @@ const clientConfig: ClientConfig = {
 // Create a new LINE SDK client.
 export const lineClient = new Client(clientConfig);
 
-export const broadcastMessage = async (): Promise<void> => {
+export const broadcastMessage = async (): Promise<number> => {
   const reports = await getUnnotifiedReportContent();
 
   if (reports.length === 0) {
-    return;
+    return 0;
   }
 
   await completeNotification(reports.map((report) => report.id));
 
   const message = await getAlertMessage(reports);
   await lineClient.broadcast(message);
+
+  return reports.length;
 };
