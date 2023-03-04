@@ -35,6 +35,7 @@ app.get(
 
     const reportContentListReponse = reportContentList.map((report) => {
       return {
+        id: report.report.user.id,
         animal: report.animal,
         latitude: report.latitude,
         longitude: report.longitude,

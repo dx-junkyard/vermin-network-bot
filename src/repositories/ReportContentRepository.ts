@@ -1,4 +1,4 @@
-import { PrismaClient, Report, ReportContent, ReportLog } from '@prisma/client';
+import { PrismaClient, Report, ReportLog } from '@prisma/client';
 
 import { findReportLog } from './ReportLogRepository';
 
@@ -24,10 +24,24 @@ function getElementByType(type: string, array: ReportLog[]): string {
   return array.find((element) => element.type === type)?.content || '{}';
 }
 
+export type ReportResult = {
+  createdAt: Date;
+  animal: string;
+  damage: string | null;
+  latitude: number;
+  longitude: number;
+  address: string;
+  report: {
+    user: {
+      id: number;
+    };
+  };
+};
+
 export const getReportContentList = async (
   from: Date | undefined,
   to: Date | undefined
-): Promise<ReportContent[]> => {
+): Promise<ReportResult[]> => {
   return await prisma.reportContent.findMany({
     where: {
       // 期間で絞り込み
@@ -39,6 +53,23 @@ export const getReportContentList = async (
     // 更新日時が最新のレポートを取得
     orderBy: {
       createdAt: 'desc',
+    },
+    select: {
+      createdAt: true,
+      animal: true,
+      damage: true,
+      latitude: true,
+      longitude: true,
+      address: true,
+      report: {
+        select: {
+          user: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      },
     },
   });
 };

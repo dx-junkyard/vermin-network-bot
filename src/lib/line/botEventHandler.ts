@@ -22,6 +22,7 @@ import {
   getProcessingReport,
   initReport,
 } from '../../repositories/ReportRepository';
+import { createUser } from '../../repositories/UserRepository';
 import {
   getAnimalOptionMessage,
   getReployAnimalMessage,
@@ -32,6 +33,7 @@ import {
   getReplyDamageMessage,
 } from '../../service/DamageMessageService';
 import { getReplyFinishMessage } from '../../service/FinishMessageService';
+import { getFollowMessage } from '../../service/FollowMessageService';
 import {
   getGeoMessage,
   getReplyGeoMessage,
@@ -59,10 +61,22 @@ export const botEventHandler = async (
   event: WebhookEvent
 ): Promise<MessageAPIResponseBase | undefined> => {
   const isMessageEvent = event.type === 'message';
+  const isFollowEvent = event.type === 'follow';
 
   // メッセージイベントでない場合は、何もしない
-  if (!isMessageEvent) {
+  if (!isMessageEvent && !isFollowEvent) {
     return;
+  }
+
+  // フォローイベントの場合は、専用メッセージで返信する
+  if (isFollowEvent) {
+    const { replyToken } = event;
+    const { userId } = event.source;
+    if (userId) {
+      await createUser(userId);
+    }
+    const startMessage = await getFollowMessage();
+    return await lineClient.replyMessage(replyToken, startMessage);
   }
 
   // 受付可能なメッセージ種別を取得する
