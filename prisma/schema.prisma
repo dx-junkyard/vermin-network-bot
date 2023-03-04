@@ -48,6 +48,15 @@ model Report {
   isCompleted Boolean        @default(false)
   logs        ReportLog[]
   content     ReportContent?
+  user        User           @relation(fields: [userId], references: [userId])
 
   @@index([userId])
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  userId    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Report    Report[]
 }
