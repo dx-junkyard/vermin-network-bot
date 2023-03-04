@@ -1,16 +1,7 @@
-import {
-  FlexCarousel,
-  FlexMessage,
-  TemplateMessage,
-  TextMessage,
-} from '@line/bot-sdk';
+import { TextMessage } from '@line/bot-sdk';
 import { ReportContent } from '@prisma/client';
 
-import {
-  AnimalOption,
-  getAnimalOption,
-  getAnimalOptionByKeyword,
-} from '../types/AnimalOption';
+import { getAnimalOptionByKeyword } from '../types/AnimalOption';
 
 export const getAlertMessage = async (
   reports: ReportContent[]
