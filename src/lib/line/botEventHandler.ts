@@ -10,6 +10,7 @@ import {
 } from '@line/bot-sdk';
 import dotenv from 'dotenv';
 
+import { uploadImage } from '../../repositories/ImageUploadRepository';
 import { createContentReport } from '../../repositories/ReportContentRepository';
 import {
   createReportLog,
@@ -157,7 +158,16 @@ export const botEventHandler = async (
     response = [await getReplyGeoMessage(), getDamageMessage()];
   } else if (reportMessageType === ReportMessage.DAMAGE && report) {
     const imageId = event.message.type === 'image' ? event.message.id : null;
-    const content = imageId ? `{"imageId":"${imageId}"}` : `{"imageId": null}`;
+
+    let imageUrl = null;
+    if (imageId) {
+      const image = await lineClient.getMessageContent(imageId);
+      imageUrl = await uploadImage(imageId, image);
+    }
+
+    const content = imageId
+      ? `{"imageId":"${imageId}", "imageUrl": "${imageUrl}"}`
+      : `{"imageId": null, "imageUrl": null}`;
 
     await createReportLog(
       report.id,

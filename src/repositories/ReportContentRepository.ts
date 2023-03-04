@@ -10,7 +10,7 @@ export const createContentReport = async (
   const reportLog = await findReportLog(reportId);
 
   const animal = JSON.parse(getElementByType('animal', reportLog))?.animal;
-  const damage = JSON.parse(getElementByType('damage', reportLog))?.imageId;
+  const damage = JSON.parse(getElementByType('damage', reportLog))?.imageUrl;
   const geo = JSON.parse(getElementByType('geo', reportLog));
   const latitude = Math.round((geo?.latitude || 0) * 1000000) / 1000000;
   const longitude = Math.round((geo?.longitude || 0) * 1000000) / 1000000;

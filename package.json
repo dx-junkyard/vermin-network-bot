@@ -19,6 +19,8 @@
   "dependencies": {
     "@line/bot-sdk": "^7.3.0",
     "@prisma/client": "^4.11.0",
+    "aws-sdk": "^2.1328.0",
+    "crypto": "^1.0.1",
     "express": "^4.17.1"
   },
   "devDependencies": {
