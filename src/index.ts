@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import express, { Application, Request, Response } from 'express';
 
 import { botEventHandler } from './lib/line/botEventHandler';
+import { broadcastMessage } from './lib/line/broadcast';
 import { getReportContentList } from './repositories/ReportContentRepository';
 
 if (process.env.NODE_ENV == 'development') {
@@ -26,6 +27,7 @@ const basePath = '/api';
 app.get(
   `${basePath}/cron/notice`,
   async (req: Request, res: Response): Promise<Response> => {
+    await broadcastMessage();
     return res.status(200).json({
       status: 'OK',
     });
