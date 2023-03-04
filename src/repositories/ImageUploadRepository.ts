@@ -16,6 +16,7 @@ export const uploadImage = async (
     Bucket: process.env.S3_BUCKET || '',
     Key: fileName,
     Body: binary,
+    ContentType: 'image/jpeg',
   };
 
   await s3.upload(params).promise();
