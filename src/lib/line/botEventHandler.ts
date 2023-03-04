@@ -161,6 +161,14 @@ export const botEventHandler = async (
     const content = imageId ? `{"imageId":"${imageId}"}` : `{"imageId": null}`;
 
     if (imageId) {
+      try {
+        const image = await lineClient.getMessageContent(imageId);
+        await uploadImage(imageId, image);
+        // S3にファイルをアップロードするなどの処理
+      } catch (error) {
+        console.error(error);
+        // エラーメッセージをユーザーに送信するなどの処理
+      }
       const image = await lineClient.getMessageContent(imageId);
       await uploadImage(imageId, image);
     }
