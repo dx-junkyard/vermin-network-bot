@@ -1,4 +1,5 @@
 import { S3 } from 'aws-sdk';
+import { createHash } from 'crypto';
 import { Readable } from 'stream';
 
 const s3 = new S3({
@@ -11,7 +12,7 @@ export const uploadImage = async (
   imageId: string,
   binary: Readable
 ): Promise<string> => {
-  const fileName = `${imageId}.jpg`;
+  const fileName = `${createHash('sha256').update(imageId).digest('hex')}.jpg`;
   const params = {
     Bucket: process.env.S3_BUCKET || '',
     Key: fileName,
