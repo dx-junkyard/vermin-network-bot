@@ -158,20 +158,16 @@ export const botEventHandler = async (
     response = [await getReplyGeoMessage(), getDamageMessage()];
   } else if (reportMessageType === ReportMessage.DAMAGE && report) {
     const imageId = event.message.type === 'image' ? event.message.id : null;
-    const content = imageId ? `{"imageId":"${imageId}"}` : `{"imageId": null}`;
 
+    let imageUrl = null;
     if (imageId) {
-      try {
-        const image = await lineClient.getMessageContent(imageId);
-        await uploadImage(imageId, image);
-        // S3にファイルをアップロードするなどの処理
-      } catch (error) {
-        if (error instanceof Error) {
-          console.log(error.name); //errorがErrorクラスである場合nameがフィールドに含まれることが保証されるので型安全
-          console.log(error.message); //errorがErrorクラスである場合messageがフィールドに含まれることが保証されるので型安全
-        }
-      }
+      const image = await lineClient.getMessageContent(imageId);
+      imageUrl = await uploadImage(imageId, image);
     }
+
+    const content = imageId
+      ? `{"imageId":"${imageId}", "imageUrl": "${imageUrl}"}`
+      : `{"imageId": null, "imageUrl": null}`;
 
     await createReportLog(
       report.id,
