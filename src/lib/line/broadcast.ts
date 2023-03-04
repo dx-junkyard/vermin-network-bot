@@ -25,7 +25,7 @@ export const broadcastMessage = async (): Promise<number> => {
     return 0;
   }
 
-  await completeNotification(reports.map((report) => report.id));
+  await completeNotification(reports.map((report) => report.reportId));
 
   const message = await getAlertMessage(reports);
   await lineClient.broadcast(message);
