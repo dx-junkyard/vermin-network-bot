@@ -48,7 +48,7 @@ model Report {
   isCompleted Boolean        @default(false)
   logs        ReportLog[]
   content     ReportContent?
-  user        User           @relation(fields: [userId], references: [userId])
+  // user        User           @relation(fields: [userId], references: [userId])
 
   @@index([userId])
 }
@@ -58,5 +58,5 @@ model User {
   userId    String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Report    Report[]
+  // Report    Report[]
 }
