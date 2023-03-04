@@ -24,6 +24,15 @@ const app: Application = express();
 const basePath = '/api';
 
 app.get(
+  `${basePath}/cron/notice`,
+  async (req: Request, res: Response): Promise<Response> => {
+    return res.status(200).json({
+      status: 'OK',
+    });
+  }
+);
+
+app.get(
   `${basePath}/report/list`,
   async (req: Request, res: Response): Promise<Response> => {
     const { from, to } = req.query;

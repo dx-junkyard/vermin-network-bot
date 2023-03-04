@@ -46,6 +46,7 @@ model Report {
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
   isCompleted Boolean        @default(false)
+  isNotified  Boolean        @default(false)
   logs        ReportLog[]
   content     ReportContent?
   user        User           @relation(fields: [userId], references: [userId])
