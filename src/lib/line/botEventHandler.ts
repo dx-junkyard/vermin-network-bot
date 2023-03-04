@@ -130,12 +130,13 @@ export const botEventHandler = async (
       getGeoMessage(),
     ];
   } else if (reportMessageType === ReportMessage.GEO && report) {
-    const { latitude, longitude } = event.message as LocationEventMessage;
+    const { latitude, longitude, address } =
+      event.message as LocationEventMessage;
 
     await createReportLog(
       report.id,
       ReportMessage.GEO,
-      `{"latitude":${latitude},"longitude":${longitude}}`,
+      `{"latitude":${latitude},"longitude":${longitude},"address":"${address}"}`,
       ReportMessage.DAMAGE
     );
 
