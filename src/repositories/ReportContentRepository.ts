@@ -1,4 +1,4 @@
-import { PrismaClient, Report, ReportLog } from '@prisma/client';
+import { PrismaClient, Report, ReportContent, ReportLog } from '@prisma/client';
 
 import { findReportLog } from './ReportLogRepository';
 
@@ -70,6 +70,23 @@ export const getReportContentList = async (
           },
         },
       },
+    },
+  });
+};
+
+export const getUnnotifiedReportContent = async (): Promise<
+  ReportContent[]
+> => {
+  return await prisma.reportContent.findMany({
+    where: {
+      report: {
+        isNotified: false,
+        isCompleted: true,
+      },
+    },
+    // 更新日時が最新のレポートを取得
+    orderBy: {
+      createdAt: 'desc',
     },
   });
 };

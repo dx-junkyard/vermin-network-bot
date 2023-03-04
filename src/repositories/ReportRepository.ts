@@ -2,6 +2,21 @@ import { PrismaClient, Report } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+export const completeNotification = async (
+  reportIds: number[]
+): Promise<void> => {
+  await prisma.report.updateMany({
+    where: {
+      id: {
+        in: reportIds,
+      },
+    },
+    data: {
+      isNotified: true,
+    },
+  });
+};
+
 export const getProcessingReport = async (
   userId: string
 ): Promise<Report | null> => {
