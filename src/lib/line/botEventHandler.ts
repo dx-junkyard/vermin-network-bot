@@ -166,8 +166,10 @@ export const botEventHandler = async (
         await uploadImage(imageId, image);
         // S3にファイルをアップロードするなどの処理
       } catch (error) {
-        console.error(error);
-        // エラーメッセージをユーザーに送信するなどの処理
+        if (error instanceof Error) {
+          console.log(error.name); //errorがErrorクラスである場合nameがフィールドに含まれることが保証されるので型安全
+          console.log(error.message); //errorがErrorクラスである場合messageがフィールドに含まれることが保証されるので型安全
+        }
       }
     }
 
