@@ -19,7 +19,7 @@ export const uploadImage = async (
     ACL: 'public-read',
   };
 
-  await s3.putObject(params).promise();
+  await s3.upload(params).promise();
 
   return `https://${process.env.S3_BUCKET}.s3.amazonaws.com/${fileName}`;
 };
