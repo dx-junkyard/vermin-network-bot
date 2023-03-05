@@ -32,8 +32,8 @@ export const completeReport = async (id: number): Promise<number> => {
     const address = geo?.address || '';
     const point = `POINT(${latitude} ${longitude})`;
 
-    const reportContent: ReportContent =
-      await tx.$queryRaw`INSERT INTO ReportContent (reportId, animal, damage, geo, latitude, longitude, address, updatedAt) VALUES (${id}, ${animal}, ${damage}, ST_GEOMFROMTEXT(${point}, 4326), ${latitude}, ${longitude}, ${address}, CURRENT_TIMESTAMP)`;
+    const reportContent =
+      await tx.$queryRaw<ReportContent>`INSERT INTO ReportContent (reportId, animal, damage, geo, latitude, longitude, address, updatedAt) VALUES (${id}, ${animal}, ${damage}, ST_GEOMFROMTEXT(${point}, 4326), ${latitude}, ${longitude}, ${address}, CURRENT_TIMESTAMP)`;
 
     // 獣害報告を完了にする
     await tx.report.update({
