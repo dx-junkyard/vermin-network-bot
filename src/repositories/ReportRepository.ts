@@ -15,6 +15,18 @@ export const completeNotification = async (
   });
 };
 
+export const getExpiredReport = async (to: Date): Promise<Report[]> => {
+  return await prisma.report.findMany({
+    where: {
+      isCompleted: false,
+      isDeleted: false,
+      createdAt: {
+        lt: to,
+      },
+    },
+  });
+};
+
 export const isAllCompleteReport = async () => {
   const reports = await prisma.report.findMany({
     where: {

@@ -4,7 +4,7 @@
   "description": "An example LINE bot with TypeScript made to echo messages",
   "main": "./dist/index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon --exec ts-node src/api/index.ts",
+    "dev": "cross-env NODE_ENV=development nodemon --exec ts-node src/index.ts",
     "clean": "rimraf ./dist",
     "build": "npm run clean && tsc",
     "start:dev": "cross-env NODE_ENV=development node ./dist/api/index.js",

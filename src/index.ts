@@ -5,8 +5,13 @@ import express, { Application, Request, Response } from 'express';
 
 import { botEventHandler } from './lib/line/botEventHandler';
 import { broadcastMessage } from './lib/line/broadcast';
+import { pushExpireMessage } from './lib/line/pushMessage';
 import { getReportContentList } from './repositories/ReportContentRepository';
-import { isAllCompleteReport } from './repositories/ReportRepository';
+import {
+  deleteReport,
+  getExpiredReport,
+  isAllCompleteReport,
+} from './repositories/ReportRepository';
 import { convertUTCtoJST } from './utils/DateUtils';
 
 if (process.env.NODE_ENV == 'development') {
@@ -43,6 +48,34 @@ app.get(
       status: 'success',
       isAllComplete,
       notice,
+    });
+  }
+);
+
+const EXPIRE_MINUTES = 30;
+
+app.get(
+  `${basePath}/cron/report/expire`,
+  async (req: Request, res: Response): Promise<Response> => {
+    const now = new Date();
+    const thresholdTime = new Date(now.getTime() - EXPIRE_MINUTES * 60 * 1000);
+    const reports = await getExpiredReport(thresholdTime);
+
+    const nonBlockingReports = reports.map(async (report) => {
+      const { userId, id } = report;
+
+      // 通報を論理削除
+      await deleteReport(id);
+
+      // 通報期限切れメッセージを送信
+      return await pushExpireMessage(userId);
+    });
+
+    await Promise.all(nonBlockingReports);
+
+    return res.status(200).json({
+      status: 'success',
+      num: reports.length,
     });
   }
 );
