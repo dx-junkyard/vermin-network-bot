@@ -19,6 +19,7 @@ import {
 } from '../../repositories/ReportLogRepository';
 import {
   completeReport,
+  deleteReport,
   getProcessingReport,
   initReport,
 } from '../../repositories/ReportRepository';
@@ -122,6 +123,10 @@ export const botEventHandler = async (
   let response: Message | Message[];
 
   if (reportMessageType === ReportMessage.START) {
+    if (report) {
+      await deleteReport(report.id);
+    }
+
     // 報告を初期化する
     const initialReport = await initReport(userId);
     await createReportLog(
@@ -191,7 +196,7 @@ export const botEventHandler = async (
     const report = await getProcessingReport(userId);
 
     if (report) {
-      await completeReport(report.id);
+      await deleteReport(report.id);
     }
     response = await getReplyFinishMessage();
   } else if (reportMessageType === ReportMessage.RETRY) {

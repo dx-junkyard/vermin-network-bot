@@ -22,6 +22,9 @@ export const findReportLog = async (reportId: number): Promise<ReportLog[]> => {
     where: {
       reportId,
     },
+    orderBy: {
+      updatedAt: 'asc',
+    },
   });
 };
 
