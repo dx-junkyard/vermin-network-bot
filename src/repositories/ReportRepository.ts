@@ -15,6 +15,16 @@ export const completeNotification = async (
   });
 };
 
+export const isAllCompleteReport = async () => {
+  const reports = await prisma.report.findMany({
+    where: {
+      isCompleted: false,
+    },
+  });
+
+  return reports.length === 0;
+};
+
 export const getProcessingReport = async (
   userId: string
 ): Promise<Report | null> => {

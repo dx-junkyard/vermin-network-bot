@@ -6,6 +6,7 @@ import express, { Application, Request, Response } from 'express';
 import { botEventHandler } from './lib/line/botEventHandler';
 import { broadcastMessage } from './lib/line/broadcast';
 import { getReportContentList } from './repositories/ReportContentRepository';
+import { isAllCompleteReport } from './repositories/ReportRepository';
 
 if (process.env.NODE_ENV == 'development') {
   dotenv.config();
@@ -27,8 +28,17 @@ const basePath = '/api';
 app.get(
   `${basePath}/cron/notice`,
   async (req: Request, res: Response): Promise<Response> => {
+    const isAllComplete = await isAllCompleteReport();
+
+    if (!isAllComplete) {
+      return res.status(200).json({
+        isAllComplete,
+        notice: false,
+      });
+    }
     const notice = await broadcastMessage();
     return res.status(200).json({
+      isAllComplete,
       notice,
     });
   }

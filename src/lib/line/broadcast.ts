@@ -2,7 +2,10 @@ import { Client, ClientConfig } from '@line/bot-sdk';
 import dotenv from 'dotenv';
 
 import { getUnnotifiedEarliestReportContent } from '../../repositories/ReportContentRepository';
-import { completeNotification } from '../../repositories/ReportRepository';
+import {
+  completeNotification,
+  isAllCompleteReport,
+} from '../../repositories/ReportRepository';
 import { getAlertMessage } from '../../service/AlertMessageService';
 
 if (process.env.NODE_ENV == 'development') {
