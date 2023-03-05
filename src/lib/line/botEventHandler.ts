@@ -15,7 +15,6 @@ import { uploadImage } from '../../repositories/ImageUploadRepository';
 import { initReport } from '../../repositories/InitReportRepository';
 import {
   createReportLog,
-  findReportLog,
   getLatestLog,
 } from '../../repositories/ReportLogRepository';
 import {
@@ -104,12 +103,7 @@ export const botEventHandler = async (
 
   // 処理中のレポートを取得する
   const report = await getProcessingReport(userId);
-  let log;
-  if (report && (await findReportLog(report.id)).length >= 1) {
-    log = await getLatestLog(report.id);
-  } else {
-    log = null;
-  }
+  const log = report ? await getLatestLog(report.id) : null;
 
   // メッセージ種別を判定する
   const reportMessageType = classifyReportMessageType(
