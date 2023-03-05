@@ -1,6 +1,5 @@
-import { PrismaClient, ReportContent } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
-import { logger } from '../lib/log4js/logger';
 import { getElementByType } from '../types/Content';
 
 const prisma = new PrismaClient();
@@ -33,10 +32,8 @@ export const completeReport = async (id: number): Promise<number> => {
     const address = geo?.address || '';
     const point = `POINT(${latitude} ${longitude})`;
 
-    const reportContent =
-      await tx.$queryRaw<ReportContent>`INSERT INTO ReportContent (reportId, animal, damage, geo, latitude, longitude, address, updatedAt) VALUES (${id}, ${animal}, ${damage}, ST_GEOMFROMTEXT(${point}, 4326), ${latitude}, ${longitude}, ${address}, CURRENT_TIMESTAMP)`;
-
-    logger.info(`reportContent: ${JSON.stringify(reportContent)}`);
+    const num =
+      await tx.$executeRaw`INSERT INTO ReportContent (reportId, animal, damage, geo, latitude, longitude, address, updatedAt) VALUES (${id}, ${animal}, ${damage}, ST_GEOMFROMTEXT(${point}, 4326), ${latitude}, ${longitude}, ${address}, CURRENT_TIMESTAMP)`;
 
     // 獣害報告を完了にする
     await tx.report.update({
@@ -48,6 +45,6 @@ export const completeReport = async (id: number): Promise<number> => {
       },
     });
 
-    return reportContent.id;
+    return num;
   });
 };

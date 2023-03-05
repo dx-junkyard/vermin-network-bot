@@ -192,10 +192,8 @@ export const botEventHandler = async (
         `獣害報告ログを作成しました。獣害報告ログID:${log.id}, 獣害報告ID:${log.reportId}`
       );
 
-      const reportContentId = await completeReport(report.id);
-      logger.info(
-        `獣害報告を完了しました。獣害報告ID:${report.id}, 獣害報告内容ID:${reportContentId}`
-      );
+      await completeReport(report.id);
+      logger.info(`獣害報告を完了しました。獣害報告ID:${report.id}`);
 
       response = getCompleteMessage();
     } else if (reportMessageType === ReportMessage.FINISH) {
