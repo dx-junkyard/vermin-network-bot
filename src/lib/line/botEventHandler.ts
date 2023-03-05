@@ -193,6 +193,8 @@ export const botEventHandler = async (
     response = await getReplyFinishMessage();
   } else if (reportMessageType === ReportMessage.RETRY) {
     response = await getReplyRetryMessage();
+  } else if (reportMessageType === ReportMessage.USAGE) {
+    response = await getFollowMessage();
   } else {
     response = await getReplyUnknownMessage();
   }
