@@ -1,4 +1,4 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { CreateBucketCommand, S3Client } from '@aws-sdk/client-s3';
 import { createHash } from 'crypto';
 import dotenv from 'dotenv';
 import { Readable } from 'stream';
@@ -27,7 +27,7 @@ export const uploadImage = async (
     ContentType: 'image/jpeg',
   };
 
-  await s3.send(new PutObjectCommand(params));
+  await s3.send(new CreateBucketCommand(params));
 
   return `https://${process.env.S3_BUCKET}.s3.amazonaws.com/${fileName}`;
 };
