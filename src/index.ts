@@ -52,10 +52,10 @@ app.get(
   }
 );
 
-const EXPIRE_MINUTES = 30;
+const EXPIRE_MINUTES = 3;
 
 app.get(
-  `${basePath}/cron/report/limit`,
+  `${basePath}/cron/report/expire`,
   async (req: Request, res: Response): Promise<Response> => {
     const now = new Date();
     const thresholdTime = new Date(now.getTime() - EXPIRE_MINUTES * 60 * 1000);

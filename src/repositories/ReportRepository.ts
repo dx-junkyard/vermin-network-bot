@@ -20,7 +20,7 @@ export const getExpiredReport = async (to: Date): Promise<Report[]> => {
     where: {
       isCompleted: false,
       isDeleted: false,
-      updatedAt: {
+      createdAt: {
         lt: to,
       },
     },
