@@ -6,6 +6,7 @@ import express, { Application, Request, Response } from 'express';
 import { botEventHandler } from './lib/line/botEventHandler';
 import { broadcastMessage } from './lib/line/broadcast';
 import { pushExpireMessage } from './lib/line/pushMessage';
+import { logger } from './lib/log4js/logger';
 import { getReportContentList } from './repositories/ReportContentRepository';
 import {
   deleteReport,
@@ -131,7 +132,7 @@ app.post(
           await botEventHandler(event);
         } catch (err: unknown) {
           if (err instanceof Error) {
-            console.error(err);
+            logger.error(err);
           }
 
           // Return an error message.
@@ -153,7 +154,7 @@ app.post(
 if (process.env.NODE_ENV == 'development') {
   // Create a server and listen to it.
   app.listen(PORT, () => {
-    console.log(`Application is live and listening on port ${PORT}`);
+    logger.info(`Application is live and listening on port ${PORT}`);
   });
 }
 

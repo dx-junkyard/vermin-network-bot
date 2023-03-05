@@ -10,18 +10,17 @@ import {
 } from '@line/bot-sdk';
 import dotenv from 'dotenv';
 
+import { completeReport } from '../../repositories/CompleteReportRepository';
 import { uploadImage } from '../../repositories/ImageUploadRepository';
-import { createContentReport } from '../../repositories/ReportContentRepository';
+import { initReport } from '../../repositories/InitReportRepository';
 import {
   createReportLog,
   findReportLog,
   getLatestLog,
 } from '../../repositories/ReportLogRepository';
 import {
-  completeReport,
   deleteReport,
   getProcessingReport,
-  initReport,
 } from '../../repositories/ReportRepository';
 import { createUser } from '../../repositories/UserRepository';
 import { classifyReportMessageType } from '../../service/ClassifyReportMessageTypeService';
@@ -42,6 +41,7 @@ import { getReplyStartMessage } from '../../service/message/StartMessageService'
 import { getReplyUnknownMessage } from '../../service/message/UnknownMessageService';
 import { getAnimalOption } from '../../types/AnimalOption';
 import { ReportMessage } from '../../types/ReportMessageType';
+import { logger } from '../log4js/logger';
 
 if (process.env.NODE_ENV == 'development') {
   dotenv.config();
@@ -120,82 +120,85 @@ export const botEventHandler = async (
 
   let response: Message | Message[];
 
-  if (reportMessageType === ReportMessage.START) {
-    if (report) {
-      await deleteReport(report.id);
+  try {
+    if (reportMessageType === ReportMessage.START) {
+      // 投稿済みの獣害報告が存在する場合は、削除する
+      if (report !== null) {
+        const deletedReport = await deleteReport(report.id);
+        logger.info(
+          `投稿済みの獣害報告が存在するため、削除しました。報告ID:${deletedReport.id}`
+        );
+      }
+
+      // 獣害報告を初期化する
+      await initReport(userId);
+
+      // メッセージを結合する
+      response = [getReplyStartMessage(), getAnimalOptionMessage()];
+    } else if (reportMessageType === ReportMessage.ANIMAL && report) {
+      await createReportLog(
+        report.id,
+        ReportMessage.ANIMAL,
+        getAnimalOption((event.message as TextEventMessage).text).content,
+        ReportMessage.GEO
+      );
+
+      response = [
+        getReployAnimalMessage((event.message as TextEventMessage).text),
+        getGeoMessage(),
+      ];
+    } else if (reportMessageType === ReportMessage.GEO && report) {
+      const { latitude, longitude, address } =
+        event.message as LocationEventMessage;
+
+      await createReportLog(
+        report.id,
+        ReportMessage.GEO,
+        `{"latitude":${latitude},"longitude":${longitude},"address":"${address}"}`,
+        ReportMessage.DAMAGE
+      );
+
+      response = [await getReplyGeoMessage(), getDamageMessage()];
+    } else if (reportMessageType === ReportMessage.DAMAGE && report) {
+      const imageId = event.message.type === 'image' ? event.message.id : null;
+
+      let imageUrl = null;
+      if (imageId) {
+        const image = await lineClient.getMessageContent(imageId);
+        imageUrl = await uploadImage(imageId, image);
+      }
+
+      const content = imageId
+        ? `{"imageId":"${imageId}", "imageUrl": "${imageUrl}"}`
+        : `{"imageId": null, "imageUrl": null}`;
+
+      // 処理に失敗しても、ロールバックできないため、トランザクションを張らない
+      await createReportLog(
+        report.id,
+        ReportMessage.DAMAGE,
+        content,
+        ReportMessage.FINISH
+      );
+
+      await completeReport(report.id);
+
+      response = getCompleteMessage();
+    } else if (reportMessageType === ReportMessage.FINISH) {
+      const report = await getProcessingReport(userId);
+
+      if (report) {
+        await deleteReport(report.id);
+      }
+      response = await getReplyFinishMessage();
+    } else if (reportMessageType === ReportMessage.RETRY) {
+      response = await getReplyRetryMessage();
+    } else if (reportMessageType === ReportMessage.USAGE) {
+      response = await getFollowMessage();
+    } else {
+      response = await getReplyUnknownMessage();
     }
-
-    // 報告を初期化する
-    const initialReport = await initReport(userId);
-    await createReportLog(
-      initialReport.id,
-      ReportMessage.START,
-      '{}',
-      ReportMessage.ANIMAL
-    );
-    // メッセージを結合する
-    response = [getReplyStartMessage(), getAnimalOptionMessage()];
-  } else if (reportMessageType === ReportMessage.ANIMAL && report) {
-    await createReportLog(
-      report.id,
-      ReportMessage.ANIMAL,
-      getAnimalOption((event.message as TextEventMessage).text).content,
-      ReportMessage.GEO
-    );
-
-    response = [
-      await getReployAnimalMessage((event.message as TextEventMessage).text),
-      getGeoMessage(),
-    ];
-  } else if (reportMessageType === ReportMessage.GEO && report) {
-    const { latitude, longitude, address } =
-      event.message as LocationEventMessage;
-
-    await createReportLog(
-      report.id,
-      ReportMessage.GEO,
-      `{"latitude":${latitude},"longitude":${longitude},"address":"${address}"}`,
-      ReportMessage.DAMAGE
-    );
-
-    response = [await getReplyGeoMessage(), getDamageMessage()];
-  } else if (reportMessageType === ReportMessage.DAMAGE && report) {
-    const imageId = event.message.type === 'image' ? event.message.id : null;
-
-    let imageUrl = null;
-    if (imageId) {
-      const image = await lineClient.getMessageContent(imageId);
-      imageUrl = await uploadImage(imageId, image);
-    }
-
-    const content = imageId
-      ? `{"imageId":"${imageId}", "imageUrl": "${imageUrl}"}`
-      : `{"imageId": null, "imageUrl": null}`;
-
-    await createReportLog(
-      report.id,
-      ReportMessage.DAMAGE,
-      content,
-      ReportMessage.FINISH
-    );
-
-    await completeReport(report.id);
-
-    await createContentReport(report.id);
-
-    response = getCompleteMessage();
-  } else if (reportMessageType === ReportMessage.FINISH) {
-    const report = await getProcessingReport(userId);
-
-    if (report) {
-      await deleteReport(report.id);
-    }
-    response = await getReplyFinishMessage();
-  } else if (reportMessageType === ReportMessage.RETRY) {
-    response = await getReplyRetryMessage();
-  } else if (reportMessageType === ReportMessage.USAGE) {
-    response = await getFollowMessage();
-  } else {
+  } catch (e) {
+    logger.error(e);
     response = await getReplyUnknownMessage();
   }
 

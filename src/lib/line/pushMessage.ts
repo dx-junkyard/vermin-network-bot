@@ -1,6 +1,8 @@
 import { Client, ClientConfig, TextMessage } from '@line/bot-sdk';
 import dotenv from 'dotenv';
 
+import { logger } from '../log4js/logger';
+
 if (process.env.NODE_ENV == 'development') {
   dotenv.config();
 }
@@ -22,7 +24,7 @@ export const pushExpireMessage = async (userId: string): Promise<boolean> => {
   try {
     await lineClient.pushMessage(userId, message);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return false;
   }
 
