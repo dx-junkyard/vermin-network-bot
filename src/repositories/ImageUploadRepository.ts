@@ -1,18 +1,11 @@
-import { CreateBucketCommand, S3Client } from '@aws-sdk/client-s3';
+import { S3 } from 'aws-sdk';
 import { createHash } from 'crypto';
-import dotenv from 'dotenv';
 import { Readable } from 'stream';
 
-if (process.env.NODE_ENV == 'development') {
-  dotenv.config();
-}
-
-const s3 = new S3Client({
+const s3 = new S3({
+  accessKeyId: process.env.S3_ACCESS_KEY || '',
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || '',
   region: process.env.S3_REGION || '',
-  credentials: {
-    accessKeyId: process.env.S3_ACCESS_KEY || '',
-    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || '',
-  },
 });
 
 export const uploadImage = async (
@@ -27,7 +20,7 @@ export const uploadImage = async (
     ContentType: 'image/jpeg',
   };
 
-  await s3.send(new CreateBucketCommand(params));
+  await s3.upload(params).promise();
 
   return `https://${process.env.S3_BUCKET}.s3.amazonaws.com/${fileName}`;
 };
