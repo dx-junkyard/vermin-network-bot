@@ -13,13 +13,13 @@ export const getReplyRetryMessage = async (): Promise<
         actions: [
           {
             type: 'message',
-            label: 'やり直す',
-            text: 'やり直す',
+            label: '中断する',
+            text: '中断する',
           },
           {
             type: 'message',
-            label: '通報を中断する',
-            text: '通報を中断する',
+            label: 'やり直す',
+            text: 'やり直す',
           },
         ],
       },
