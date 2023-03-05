@@ -27,9 +27,9 @@ const basePath = '/api';
 app.get(
   `${basePath}/cron/notice`,
   async (req: Request, res: Response): Promise<Response> => {
-    const num = await broadcastMessage();
+    const notice = await broadcastMessage();
     return res.status(200).json({
-      num,
+      notice,
     });
   }
 );
