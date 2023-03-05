@@ -2,14 +2,17 @@ import { Message } from '@line/bot-sdk';
 import { ReportContent } from '@prisma/client';
 
 import { getAnimalOptionByKeyword } from '../types/AnimalOption';
+import { convertUTCtoJST } from '../utils/DateUtils';
 
 export const getAlertMessage = async (
   report: ReportContent
 ): Promise<Message[]> => {
+  const createdAt = convertUTCtoJST(report.createdAt);
+
   return [
     {
       type: 'text',
-      text: `本日${report.createdAt.getHours()}時${report.createdAt.getMinutes()}分に、\n${
+      text: `本日${createdAt.getHours()}時${createdAt.getMinutes()}分に、\n${
         report.address
       }において、${
         getAnimalOptionByKeyword(report.animal).title
