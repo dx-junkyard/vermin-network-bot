@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 import { getUnnotifiedEarliestReportContent } from '../../repositories/ReportContentRepository';
 import { completeNotification } from '../../repositories/ReportRepository';
-import { getAlertMessage } from '../../service/AlertMessageService';
+import { getAlertMessage } from '../../service/message/AlertMessageService';
 
 if (process.env.NODE_ENV == 'development') {
   dotenv.config();

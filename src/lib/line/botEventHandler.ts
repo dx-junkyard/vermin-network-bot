@@ -24,24 +24,24 @@ import {
   initReport,
 } from '../../repositories/ReportRepository';
 import { createUser } from '../../repositories/UserRepository';
+import { classifyReportMessageType } from '../../service/ClassifyReportMessageTypeService';
 import {
   getAnimalOptionMessage,
   getReployAnimalMessage,
-} from '../../service/AnimalMessageService';
-import { classifyReportMessageType } from '../../service/ClassifyReportMessageTypeService';
+} from '../../service/message/AnimalMessageService';
 import {
   getDamageMessage,
   getReplyDamageMessage,
-} from '../../service/DamageMessageService';
-import { getReplyFinishMessage } from '../../service/FinishMessageService';
-import { getFollowMessage } from '../../service/FollowMessageService';
+} from '../../service/message/DamageMessageService';
+import { getReplyFinishMessage } from '../../service/message/FinishMessageService';
+import { getFollowMessage } from '../../service/message/FollowMessageService';
 import {
   getGeoMessage,
   getReplyGeoMessage,
-} from '../../service/GeoMessageService';
-import { getReplyRetryMessage } from '../../service/RetryMessageService';
-import { getReplyStartMessage } from '../../service/StartMessageService';
-import { getReplyUnknownMessage } from '../../service/UnknownMessageService';
+} from '../../service/message/GeoMessageService';
+import { getReplyRetryMessage } from '../../service/message/RetryMessageService';
+import { getReplyStartMessage } from '../../service/message/StartMessageService';
+import { getReplyUnknownMessage } from '../../service/message/UnknownMessageService';
 import { getAnimalOption } from '../../types/AnimalOption';
 import { ReportMessage } from '../../types/ReportMessageType';
 
