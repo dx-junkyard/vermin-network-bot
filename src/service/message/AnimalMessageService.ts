@@ -13,9 +13,7 @@ import {
  * @param eventMessage
  * @returns
  */
-export const getReployAnimalMessage = async (
-  text: string
-): Promise<TextMessage> => {
+export const getReployAnimalMessage = (text: string): TextMessage => {
   const animalOption = getAnimalOption(text);
   const animalText = getReplyText(animalOption);
 

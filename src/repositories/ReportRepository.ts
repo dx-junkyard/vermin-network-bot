@@ -53,21 +53,6 @@ export const getProcessingReport = async (
   });
 };
 
-/**
- * レポートを初期化する
- *
- * @param userId LINEユーザID
- * @returns {Promise<Report>}
- */
-export const initReport = async (userId: string): Promise<Report> => {
-  return await prisma.report.create({
-    data: {
-      userId: userId,
-      isCompleted: false,
-    },
-  });
-};
-
 export const deleteReport = async (id: number): Promise<Report> => {
   return await prisma.report.update({
     where: {
