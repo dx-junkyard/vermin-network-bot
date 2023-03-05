@@ -1,8 +1,8 @@
 import { Message } from '@line/bot-sdk';
 import { ReportContent } from '@prisma/client';
 
-import { getAnimalOptionByKeyword } from '../types/AnimalOption';
-import { convertUTCtoJST } from '../utils/DateUtils';
+import { getAnimalOptionByKeyword } from '../../types/AnimalOption';
+import { convertUTCtoJST } from '../../utils/DateUtils';
 
 export const getAlertMessage = async (
   report: ReportContent
@@ -10,6 +10,11 @@ export const getAlertMessage = async (
   const createdAt = convertUTCtoJST(report.createdAt);
 
   return [
+    {
+      type: 'sticker',
+      packageId: '11537',
+      stickerId: '52002749',
+    },
     {
       type: 'text',
       text: `本日${createdAt.getHours()}時${createdAt.getMinutes()}分に、\n${

@@ -24,24 +24,22 @@ import {
   initReport,
 } from '../../repositories/ReportRepository';
 import { createUser } from '../../repositories/UserRepository';
+import { classifyReportMessageType } from '../../service/ClassifyReportMessageTypeService';
 import {
   getAnimalOptionMessage,
   getReployAnimalMessage,
-} from '../../service/AnimalMessageService';
-import { classifyReportMessageType } from '../../service/ClassifyReportMessageTypeService';
-import {
-  getDamageMessage,
-  getReplyDamageMessage,
-} from '../../service/DamageMessageService';
-import { getReplyFinishMessage } from '../../service/FinishMessageService';
-import { getFollowMessage } from '../../service/FollowMessageService';
+} from '../../service/message/AnimalMessageService';
+import { getCompleteMessage } from '../../service/message/CompleteMessageService';
+import { getDamageMessage } from '../../service/message/DamageMessageService';
+import { getReplyFinishMessage } from '../../service/message/FinishMessageService';
+import { getFollowMessage } from '../../service/message/FollowMessageService';
 import {
   getGeoMessage,
   getReplyGeoMessage,
-} from '../../service/GeoMessageService';
-import { getReplyRetryMessage } from '../../service/RetryMessageService';
-import { getReplyStartMessage } from '../../service/StartMessageService';
-import { getReplyUnknownMessage } from '../../service/UnknownMessageService';
+} from '../../service/message/GeoMessageService';
+import { getReplyRetryMessage } from '../../service/message/RetryMessageService';
+import { getReplyStartMessage } from '../../service/message/StartMessageService';
+import { getReplyUnknownMessage } from '../../service/message/UnknownMessageService';
 import { getAnimalOption } from '../../types/AnimalOption';
 import { ReportMessage } from '../../types/ReportMessageType';
 
@@ -185,13 +183,7 @@ export const botEventHandler = async (
 
     await createContentReport(report.id);
 
-    response = [
-      await getReplyDamageMessage(),
-      {
-        type: 'text',
-        text: '周辺にお住まいの方にもご注意いただくため、今回の被害発生についてLINE登録の皆様にお知らせします。\nまた今後、役場より周辺のパトロールを行います。\n通報にご協力いただきありがとうございました。',
-      },
-    ];
+    response = getCompleteMessage();
   } else if (reportMessageType === ReportMessage.FINISH) {
     const report = await getProcessingReport(userId);
 
