@@ -1,13 +1,27 @@
 import { PrismaClient } from '@prisma/client';
 
 import { EMPTY_CONTENT } from '../types/Content';
-import { ReportMessage } from '../types/ReportMessageType';
+import { ReportMessage, ReportMessageType } from '../types/ReportMessageType';
 
 const prisma = new PrismaClient();
 
-export const initReport = async (userId: string): Promise<void> => {
+export type InitResult = {
+  reportId: number;
+  reportLogId: number;
+};
+
+/**
+ * 獣害報告の初期化を行う
+ *
+ * @param userId ユーザID
+ * @returns 獣害報告ID
+ */
+export const initReport = async (
+  userId: string,
+  nextScheduledType: ReportMessageType
+): Promise<InitResult> => {
   // 獣害報告を初期化する
-  await prisma.$transaction(async (tx) => {
+  return await prisma.$transaction(async (tx) => {
     const initialReport = await tx.report.create({
       data: {
         userId: userId,
@@ -17,15 +31,18 @@ export const initReport = async (userId: string): Promise<void> => {
       },
     });
 
-    await tx.reportLog.create({
+    const log = await tx.reportLog.create({
       data: {
         reportId: initialReport.id,
         type: ReportMessage.START,
         content: EMPTY_CONTENT,
-        nextScheduledType: ReportMessage.ANIMAL,
+        nextScheduledType,
       },
     });
-  });
 
-  return;
+    return {
+      reportId: initialReport.id,
+      reportLogId: log.id,
+    };
+  });
 };

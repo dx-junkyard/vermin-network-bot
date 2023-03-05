@@ -4,9 +4,15 @@ import { getElementByType } from '../types/Content';
 
 const prisma = new PrismaClient();
 
-export const completeReport = async (id: number): Promise<void> => {
+/**
+ * 獣害報告の完了処理を行う
+ *
+ * @param id 獣害報告ID
+ * @returns 獣害報告内容ID
+ */
+export const completeReport = async (id: number): Promise<number> => {
   // 獣害報告を初期化する
-  await prisma.$transaction(async (tx) => {
+  return await prisma.$transaction(async (tx) => {
     // 獣害報告ログを取得する
     const reportLogs = await tx.reportLog.findMany({
       where: {
@@ -26,7 +32,8 @@ export const completeReport = async (id: number): Promise<void> => {
     const address = geo?.address || '';
     const point = `POINT(${latitude} ${longitude})`;
 
-    await tx.$queryRaw`INSERT INTO ReportContent (reportId, animal, damage, geo, latitude, longitude, address, updatedAt) VALUES (${id}, ${animal}, ${damage}, ST_GEOMFROMTEXT(${point}, 4326), ${latitude}, ${longitude}, ${address}, CURRENT_TIMESTAMP)`;
+    const num =
+      await tx.$executeRaw`INSERT INTO ReportContent (reportId, animal, damage, geo, latitude, longitude, address, updatedAt) VALUES (${id}, ${animal}, ${damage}, ST_GEOMFROMTEXT(${point}, 4326), ${latitude}, ${longitude}, ${address}, CURRENT_TIMESTAMP)`;
 
     // 獣害報告を完了にする
     await tx.report.update({
@@ -37,7 +44,7 @@ export const completeReport = async (id: number): Promise<void> => {
         isCompleted: true,
       },
     });
-  });
 
-  return;
+    return num;
+  });
 };
