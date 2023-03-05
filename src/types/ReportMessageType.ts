@@ -6,6 +6,7 @@ export const ReportMessage = {
   UNDEFINED: 'undefined',
   RETRY: 'retry',
   FINISH: 'finish',
+  USAGE: 'usage',
 } as const;
 
 export type ReportMessageType =
