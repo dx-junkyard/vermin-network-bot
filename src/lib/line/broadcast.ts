@@ -1,7 +1,7 @@
 import { Client, ClientConfig } from '@line/bot-sdk';
 import dotenv from 'dotenv';
 
-import { getUnnotifiedReportContent } from '../../repositories/ReportContentRepository';
+import { getUnnotifiedEarliestReportContent } from '../../repositories/ReportContentRepository';
 import { completeNotification } from '../../repositories/ReportRepository';
 import { getAlertMessage } from '../../service/AlertMessageService';
 
@@ -18,17 +18,17 @@ const clientConfig: ClientConfig = {
 // Create a new LINE SDK client.
 export const lineClient = new Client(clientConfig);
 
-export const broadcastMessage = async (): Promise<number> => {
-  const reports = await getUnnotifiedReportContent();
+export const broadcastMessage = async (): Promise<boolean> => {
+  const report = await getUnnotifiedEarliestReportContent();
 
-  if (reports.length === 0) {
-    return 0;
+  if (!report) {
+    return false;
   }
 
-  await completeNotification(reports.map((report) => report.reportId));
+  await completeNotification(report.reportId);
 
-  const message = await getAlertMessage(reports);
+  const message = await getAlertMessage(report);
   await lineClient.broadcast(message);
 
-  return reports.length;
+  return true;
 };

@@ -3,13 +3,11 @@ import { PrismaClient, Report } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export const completeNotification = async (
-  reportIds: number[]
-): Promise<void> => {
-  await prisma.report.updateMany({
+  reportId: number
+): Promise<Report> => {
+  return await prisma.report.update({
     where: {
-      id: {
-        in: reportIds,
-      },
+      id: reportId,
     },
     data: {
       isNotified: true,

@@ -74,19 +74,18 @@ export const getReportContentList = async (
   });
 };
 
-export const getUnnotifiedReportContent = async (): Promise<
-  ReportContent[]
-> => {
-  return await prisma.reportContent.findMany({
-    where: {
-      report: {
-        isNotified: false,
-        isCompleted: true,
+export const getUnnotifiedEarliestReportContent =
+  async (): Promise<ReportContent | null> => {
+    return await prisma.reportContent.findFirst({
+      where: {
+        report: {
+          isNotified: false,
+          isCompleted: true,
+        },
       },
-    },
-    // 更新日時が最新のレポートを取得
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
-};
+      // 更新日時が一番古いレポートを取得
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
+  };
