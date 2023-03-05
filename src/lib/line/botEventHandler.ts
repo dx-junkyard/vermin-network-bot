@@ -39,6 +39,7 @@ import {
   getGeoMessage,
   getReplyGeoMessage,
 } from '../../service/GeoMessageService';
+import { getReplyRetryMessage } from '../../service/RetryMessageService';
 import { getReplyStartMessage } from '../../service/StartMessageService';
 import { getReplyUnknownMessage } from '../../service/UnknownMessageService';
 import { getAnimalOption } from '../../types/AnimalOption';
@@ -194,6 +195,8 @@ export const botEventHandler = async (
       await deleteReport(report.id);
     }
     response = await getReplyFinishMessage();
+  } else if (reportMessageType === ReportMessage.RETRY) {
+    response = await getReplyRetryMessage();
   } else {
     response = await getReplyUnknownMessage();
   }
