@@ -32,12 +32,14 @@ app.get(
 
     if (!isAllComplete) {
       return res.status(200).json({
+        status: 'success',
         isAllComplete,
         notice: false,
       });
     }
     const notice = await broadcastMessage();
     return res.status(200).json({
+      status: 'success',
       isAllComplete,
       notice,
     });
