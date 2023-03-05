@@ -61,7 +61,7 @@ app.get(
     const thresholdTime = new Date(now.getTime() - EXPIRE_MINUTES * 60 * 1000);
     const reports = await getExpiredReport(thresholdTime);
 
-    reports.map(async (report) => {
+    const nonBlockingReports = reports.map(async (report) => {
       const { userId, id } = report;
 
       // 通報を論理削除
@@ -70,6 +70,8 @@ app.get(
       // 通報期限切れメッセージを送信
       return await pushExpireMessage(userId);
     });
+
+    await Promise.all(nonBlockingReports);
 
     return res.status(200).json({
       status: 'success',
