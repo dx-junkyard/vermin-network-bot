@@ -35,17 +35,16 @@ export function classifyReportMessageType(
       return ReportMessage.DAMAGE;
     case eventMessage.type === 'text' &&
       log &&
-      /通報を中断する/.test(eventMessage.text):
+      /中断する/.test(eventMessage.text):
       return ReportMessage.FINISH;
     // 通報再開メッセージが送られた場合は、通報を再開する
     case eventMessage.type === 'text' &&
       log &&
-      /再開する/.test(eventMessage.text):
-      return (
-        // 予約済みのメッセージ種別があれば、それを返す
-        // なければ、通報開始メッセージを返す
-        (log?.nextScheduledType as ReportMessageType) || ReportMessage.START
-      );
+      /やり直す/.test(eventMessage.text):
+      // 通報開始メッセージを返す
+      return ReportMessage.START;
+    case !!report:
+      return ReportMessage.RETRY;
     default:
       return ReportMessage.UNDEFINED;
   }

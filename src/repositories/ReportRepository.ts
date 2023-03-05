@@ -56,6 +56,18 @@ export const initReport = async (userId: string): Promise<Report> => {
   });
 };
 
+export const deleteReport = async (id: number): Promise<Report> => {
+  return await prisma.report.update({
+    where: {
+      id,
+    },
+    data: {
+      isCompleted: true,
+      isDeleted: true,
+    },
+  });
+};
+
 export const completeReport = async (id: number): Promise<Report> => {
   return await prisma.report.update({
     where: {
@@ -63,14 +75,6 @@ export const completeReport = async (id: number): Promise<Report> => {
     },
     data: {
       isCompleted: true,
-    },
-  });
-};
-
-export const deleteReport = async (reportId: number): Promise<Report> => {
-  return await prisma.report.delete({
-    where: {
-      id: reportId,
     },
   });
 };

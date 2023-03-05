@@ -39,6 +39,7 @@ import {
   getGeoMessage,
   getReplyGeoMessage,
 } from '../../service/GeoMessageService';
+import { getReplyRetryMessage } from '../../service/RetryMessageService';
 import { getReplyStartMessage } from '../../service/StartMessageService';
 import { getReplyUnknownMessage } from '../../service/UnknownMessageService';
 import { getAnimalOption } from '../../types/AnimalOption';
@@ -122,6 +123,10 @@ export const botEventHandler = async (
   let response: Message | Message[];
 
   if (reportMessageType === ReportMessage.START) {
+    if (report) {
+      await deleteReport(report.id);
+    }
+
     // 報告を初期化する
     const initialReport = await initReport(userId);
     await createReportLog(
@@ -194,6 +199,8 @@ export const botEventHandler = async (
       await deleteReport(report.id);
     }
     response = await getReplyFinishMessage();
+  } else if (reportMessageType === ReportMessage.RETRY) {
+    response = await getReplyRetryMessage();
   } else {
     response = await getReplyUnknownMessage();
   }

@@ -21,7 +21,7 @@ export const createContentReport = async (
 };
 
 function getElementByType(type: string, array: ReportLog[]): string {
-  return array.find((element) => element.type === type)?.content || '{}';
+  return array.sort().find((element) => element.type === type)?.content || '{}';
 }
 
 export type ReportResult = {
@@ -48,6 +48,9 @@ export const getReportContentList = async (
       createdAt: {
         gte: from,
         lte: to,
+      },
+      report: {
+        isDeleted: false,
       },
     },
     // 更新日時が最新のレポートを取得
@@ -81,6 +84,7 @@ export const getUnnotifiedEarliestReportContent =
         report: {
           isNotified: false,
           isCompleted: true,
+          isDeleted: false,
         },
       },
       // 更新日時が一番古いレポートを取得
