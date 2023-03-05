@@ -44,7 +44,7 @@ export function classifyReportMessageType(
       return (
         // 予約済みのメッセージ種別があれば、それを返す
         // なければ、通報開始メッセージを返す
-        (log?.nextScheduledType as ReportMessageType) || ReportMessage.START
+        (log?.type as ReportMessageType) || ReportMessage.START
       );
     case !!report:
       return ReportMessage.RETRY;

@@ -19,7 +19,6 @@ import {
 } from '../../repositories/ReportLogRepository';
 import {
   completeReport,
-  deleteReport,
   getProcessingReport,
   initReport,
 } from '../../repositories/ReportRepository';
@@ -192,7 +191,7 @@ export const botEventHandler = async (
     const report = await getProcessingReport(userId);
 
     if (report) {
-      await deleteReport(report.id);
+      await completeReport(report.id);
     }
     response = await getReplyFinishMessage();
   } else if (reportMessageType === ReportMessage.RETRY) {
