@@ -11,9 +11,9 @@ export const getAlertMessage = async (
       type: 'text',
       text: `本日${report.createdAt.getHours()}時${report.createdAt.getMinutes()}分に、\n${
         report.address
-      }において、${getAnimalOptionByKeyword(
-        report.animal
-      )}の報告がありました。\n\n周辺の地域の方は\n改めて柵やフェンスが破損してないか点検し、\n被害防止に努めるようにしてください。`,
+      }において、${
+        getAnimalOptionByKeyword(report.animal).title
+      }の報告がありました。\n\n周辺の地域の方は\n改めて柵やフェンスが破損してないか点検し、\n被害防止に努めるようにしてください。`,
     },
     {
       type: 'location',
