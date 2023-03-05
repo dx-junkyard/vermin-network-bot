@@ -130,17 +130,23 @@ export const botEventHandler = async (
         );
       }
 
-      // 獣害報告を初期化する
-      await initReport(userId);
+      // 獣害報告を初期化し、次回の入力項目を獣害報告入力メッセージとする
+      const initResult = await initReport(userId, ReportMessage.ANIMAL);
+      logger.info(
+        `獣害報告を初期化しました。獣害報告ID:${initResult.reportId}, 獣害報告ログID:${initResult.reportLogId}`
+      );
 
       // メッセージを結合する
       response = [getReplyStartMessage(), getAnimalOptionMessage()];
     } else if (reportMessageType === ReportMessage.ANIMAL && report) {
-      await createReportLog(
+      const log = await createReportLog(
         report.id,
         ReportMessage.ANIMAL,
         getAnimalOption((event.message as TextEventMessage).text).content,
         ReportMessage.GEO
+      );
+      logger.info(
+        `獣害報告ログを作成しました。獣害報告ログID:${log.id}, 獣害報告ID:${log.reportId}`
       );
 
       response = [
@@ -151,11 +157,14 @@ export const botEventHandler = async (
       const { latitude, longitude, address } =
         event.message as LocationEventMessage;
 
-      await createReportLog(
+      const log = await createReportLog(
         report.id,
         ReportMessage.GEO,
         `{"latitude":${latitude},"longitude":${longitude},"address":"${address}"}`,
         ReportMessage.DAMAGE
+      );
+      logger.info(
+        `獣害報告ログを作成しました。獣害報告ログID:${log.id}, 獣害報告ID:${log.reportId}`
       );
 
       response = [await getReplyGeoMessage(), getDamageMessage()];
@@ -173,14 +182,20 @@ export const botEventHandler = async (
         : `{"imageId": null, "imageUrl": null}`;
 
       // 処理に失敗しても、ロールバックできないため、トランザクションを張らない
-      await createReportLog(
+      const log = await createReportLog(
         report.id,
         ReportMessage.DAMAGE,
         content,
         ReportMessage.FINISH
       );
+      logger.info(
+        `獣害報告ログを作成しました。獣害報告ログID:${log.id}, 獣害報告ID:${log.reportId}`
+      );
 
-      await completeReport(report.id);
+      const reportContentId = await completeReport(report.id);
+      logger.info(
+        `獣害報告を完了しました。獣害報告ID:${report.id}, 獣害報告内容ID:${reportContentId}`
+      );
 
       response = getCompleteMessage();
     } else if (reportMessageType === ReportMessage.FINISH) {
@@ -188,6 +203,7 @@ export const botEventHandler = async (
 
       if (report) {
         await deleteReport(report.id);
+        logger.info(`獣害報告を削除しました。獣害報告ID:${report.id}`);
       }
       response = await getReplyFinishMessage();
     } else if (reportMessageType === ReportMessage.RETRY) {
