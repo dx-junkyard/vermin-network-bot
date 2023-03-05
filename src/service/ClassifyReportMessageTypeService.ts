@@ -37,9 +37,7 @@ export function classifyReportMessageType(
       log &&
       /中断する/.test(eventMessage.text):
       return ReportMessage.FINISH;
-    case eventMessage.type === 'text' &&
-      log &&
-      /使い方/.test(eventMessage.text):
+    case eventMessage.type === 'text' && /使い方/.test(eventMessage.text):
       return ReportMessage.USAGE;
     // 通報再開メッセージが送られた場合は、通報を再開する
     case eventMessage.type === 'text' &&
