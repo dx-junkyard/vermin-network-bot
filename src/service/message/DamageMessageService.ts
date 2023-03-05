@@ -1,10 +1,5 @@
 import { TemplateMessage, TextMessage } from '@line/bot-sdk';
 
-import { createContentReport } from '../../repositories/ReportContentRepository';
-import { createReportLog } from '../../repositories/ReportLogRepository';
-import { completeReport } from '../../repositories/ReportRepository';
-import { ReportMessage } from '../../types/ReportMessageType';
-
 export const getDamageMessage = (): TemplateMessage => {
   return {
     type: 'template',

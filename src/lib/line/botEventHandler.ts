@@ -29,10 +29,8 @@ import {
   getAnimalOptionMessage,
   getReployAnimalMessage,
 } from '../../service/message/AnimalMessageService';
-import {
-  getDamageMessage,
-  getReplyDamageMessage,
-} from '../../service/message/DamageMessageService';
+import { getCompleteMessage } from '../../service/message/CompleteMessageService';
+import { getDamageMessage } from '../../service/message/DamageMessageService';
 import { getReplyFinishMessage } from '../../service/message/FinishMessageService';
 import { getFollowMessage } from '../../service/message/FollowMessageService';
 import {
@@ -185,13 +183,7 @@ export const botEventHandler = async (
 
     await createContentReport(report.id);
 
-    response = [
-      await getReplyDamageMessage(),
-      {
-        type: 'text',
-        text: '周辺にお住まいの方にもご注意いただくため、今回の被害発生についてLINE登録の皆様にお知らせします。\nまた今後、役場より周辺のパトロールを行います。\n通報にご協力いただきありがとうございました。',
-      },
-    ];
+    response = getCompleteMessage();
   } else if (reportMessageType === ReportMessage.FINISH) {
     const report = await getProcessingReport(userId);
 

@@ -11,6 +11,11 @@ export const getAlertMessage = async (
 
   return [
     {
+      type: 'sticker',
+      packageId: '11537',
+      stickerId: '52002749',
+    },
+    {
       type: 'text',
       text: `本日${createdAt.getHours()}時${createdAt.getMinutes()}分に、\n${
         report.address
