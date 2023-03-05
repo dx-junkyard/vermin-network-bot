@@ -52,7 +52,7 @@ app.get(
   }
 );
 
-const EXPIRE_MINUTES = 3;
+const EXPIRE_MINUTES = 30;
 
 app.get(
   `${basePath}/cron/report/limit`,
