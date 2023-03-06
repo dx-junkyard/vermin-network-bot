@@ -124,17 +124,14 @@ export const botEventHandler = async (
         );
       }
 
-      // 受付時にメッセージを送信する
-      await lineClient.pushMessage(userId, getReplyStartMessage());
-
       // 獣害報告を初期化し、次回の入力項目を獣害報告入力メッセージとする
       const initResult = await initReport(userId, ReportMessage.ANIMAL);
       logger.info(
         `獣害報告を初期化しました。獣害報告ID:${initResult.reportId}, 獣害報告ログID:${initResult.reportLogId}`
       );
 
-      // メッセージを返信する
-      response = getAnimalOptionMessage();
+      // メッセージを結合する
+      response = [getReplyStartMessage(), getAnimalOptionMessage()];
     } else if (reportMessageType === ReportMessage.ANIMAL && report) {
       const log = await createReportLog(
         report.id,
