@@ -1,6 +1,6 @@
 import { Message } from '@line/bot-sdk';
 
-export const getReplyUnknownMessage = async (): Promise<Message> => {
+export const getReplyUnknownMessage = (): Message => {
   return {
     type: 'text',
     // FIXME: 入力が分類できなかった場合のメッセージを検討する

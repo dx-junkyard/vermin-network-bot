@@ -1,4 +1,4 @@
-import { TemplateMessage, TextMessage } from '@line/bot-sdk';
+import { TemplateMessage } from '@line/bot-sdk';
 
 export const getDamageMessage = (): TemplateMessage => {
   return {
@@ -25,10 +25,3 @@ export const getDamageMessage = (): TemplateMessage => {
     },
   };
 };
-
-export async function getReplyDamageMessage(): Promise<TextMessage> {
-  return {
-    type: 'text',
-    text: '被害報告を承りました。\nご報告ありがとうございました。',
-  };
-}

@@ -1,8 +1,6 @@
-import { TemplateMessage, TextMessage } from '@line/bot-sdk';
+import { Message } from '@line/bot-sdk';
 
-export const getReplyRetryMessage = async (): Promise<
-  (TextMessage | TemplateMessage)[]
-> => {
+export const getReplyRetryMessage = (): Message[] => {
   return [
     {
       type: 'template',

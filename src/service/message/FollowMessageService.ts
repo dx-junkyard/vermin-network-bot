@@ -6,7 +6,7 @@ export const message = [
   '報告する際には、被害の場所や、写真などをお知らせください。それにより、被害の把握や対策に役立てています。',
 ].join('\n\n');
 
-export const getFollowMessage = async (): Promise<TextMessage> => {
+export const getFollowMessage = (): TextMessage => {
   return {
     type: 'text',
     text: message,
