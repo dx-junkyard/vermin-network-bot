@@ -24,9 +24,12 @@ export const completeReport = async (id: number): Promise<number> => {
     });
 
     // 獣害報告ログから獣害報告内容を作成し、獣害報告内容テーブルに保存する
-    const animal = JSON.parse(getElementByType('animal', reportLogs))?.animal;
-    const damage = JSON.parse(getElementByType('damage', reportLogs))?.imageUrl;
-    const geo = JSON.parse(getElementByType('geo', reportLogs));
+    // const animal = JSON.parse(getElementByType('animal', reportLogs))?.animal;
+    // const damage = JSON.parse(getElementByType('damage', reportLogs))?.imageUrl;
+    // const geo = JSON.parse(getElementByType('geo', reportLogs));
+    const animal = getElementByType('animal', reportLogs)?.animal;
+    const damage = getElementByType('damage', reportLogs)?.imageUrl;
+    const geo = getElementByType('geo', reportLogs);
     const latitude = Math.round((geo?.latitude || 0) * 1000000) / 1000000;
     const longitude = Math.round((geo?.longitude || 0) * 1000000) / 1000000;
     const address = geo?.address || '';

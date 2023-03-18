@@ -1,25 +1,27 @@
+import { ContentJson } from './Content';
+
 export const AnimalOption = {
   BOAR: {
     option: 'イノシシ',
-    content: '{"animal": "boar"}',
+    content: { animal: 'boar' } as ContentJson,
     keyword: 'boar',
     title: 'イノシシの被害',
   },
   DEER: {
     option: 'シカ',
-    content: '{"animal": "deer"}',
+    content: { animal: 'deer' } as ContentJson,
     keyword: 'deer',
     title: 'シカの被害',
   },
   MONKEY: {
     option: 'サル',
-    content: '{"animal": "monkey"}',
+    content: { animal: 'monkey' } as ContentJson,
     keyword: 'monkey',
     title: 'サルの被害',
   },
   OTHER: {
     option: 'その他、わからない',
-    content: '{"animal": "other"}',
+    content: { animal: 'other' } as ContentJson,
     keyword: 'other',
     title: 'その他の被害',
   },

@@ -39,6 +39,7 @@ import { getReplyRetryMessage } from '../../service/message/RetryMessageService'
 import { getReplyStartMessage } from '../../service/message/StartMessageService';
 import { getReplyUnknownMessage } from '../../service/message/UnknownMessageService';
 import { getAnimalOption } from '../../types/AnimalOption';
+import { ContentJson } from '../../types/Content';
 import { ReportMessage } from '../../types/ReportMessageType';
 import { logger } from '../log4js/logger';
 
@@ -154,7 +155,11 @@ export const botEventHandler = async (
       const log = await createReportLog(
         report.id,
         ReportMessage.GEO,
-        `{"latitude":${latitude},"longitude":${longitude},"address":"${address}"}`,
+        {
+          latitude: latitude,
+          longitude: longitude,
+          address: address,
+        } as ContentJson,
         ReportMessage.DAMAGE
       );
       logger.info(
@@ -172,8 +177,11 @@ export const botEventHandler = async (
       }
 
       const content = imageId
-        ? `{"imageId":"${imageId}", "imageUrl": "${imageUrl}"}`
-        : `{"imageId": null, "imageUrl": null}`;
+        ? ({ imageId: imageId, imageUrl: imageUrl || undefined } as ContentJson)
+        : ({
+            imageId: undefined,
+            imageUrl: imageUrl || undefined,
+          } as ContentJson);
 
       // 処理に失敗しても、ロールバックできないため、トランザクションを張らない
       const log = await createReportLog(
