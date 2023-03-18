@@ -29,7 +29,7 @@ export const AnimalOption = {
 
 export type AnimalOptionType = (typeof AnimalOption)[keyof typeof AnimalOption];
 
-export function getAnimalOption(text: string): AnimalOptionType {
+export const getAnimalOption = (text: string): AnimalOptionType => {
   switch (true) {
     case /イノシシ/.test(text):
       return AnimalOption.BOAR;
@@ -41,9 +41,9 @@ export function getAnimalOption(text: string): AnimalOptionType {
     default:
       return AnimalOption.OTHER;
   }
-}
+};
 
-export function getAnimalOptionByKeyword(keyword: string): AnimalOptionType {
+export const getAnimalOptionByKeyword = (keyword: string): AnimalOptionType => {
   switch (true) {
     case /boar/.test(keyword):
       return AnimalOption.BOAR;
@@ -55,4 +55,4 @@ export function getAnimalOptionByKeyword(keyword: string): AnimalOptionType {
     default:
       return AnimalOption.OTHER;
   }
-}
+};

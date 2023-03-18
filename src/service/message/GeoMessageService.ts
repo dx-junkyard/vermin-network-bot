@@ -12,19 +12,14 @@ export const getGeoMessage = (): TemplateMessage => {
           type: 'location',
           label: '位置情報を送信する',
         },
-        // {
-        //   type: 'message',
-        //   label: '位置情報送らない',
-        //   text: '位置情報送らない',
-        // },
       ],
     },
   };
 };
 
-export async function getReplyGeoMessage(): Promise<TextMessage> {
+export const getReplyGeoMessage = (): TextMessage => {
   return {
     type: 'text',
     text: '位置情報を承りました。',
   };
-}
+};

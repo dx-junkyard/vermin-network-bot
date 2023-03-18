@@ -1,8 +1,6 @@
-import { TemplateMessage, TextMessage } from '@line/bot-sdk';
+import { Message } from '@line/bot-sdk';
 
-export const getReplyCancelMessage = async (): Promise<
-  (TextMessage | TemplateMessage)[]
-> => {
+export const getReplyCancelMessage = async (): Promise<Message[]> => {
   return [
     {
       type: 'template',

@@ -75,7 +75,7 @@ export const botEventHandler = async (
     if (userId) {
       await createUser(userId);
     }
-    const startMessage = await getFollowMessage();
+    const startMessage = getFollowMessage();
     return await lineClient.replyMessage(replyToken, startMessage);
   }
 
@@ -88,7 +88,7 @@ export const botEventHandler = async (
   // 受付可能なメッセージ種別でない場合は、専用メッセージで返信する
   if (!isAcceptableMessageType) {
     const { replyToken } = event;
-    const unknownMessage = await getReplyUnknownMessage();
+    const unknownMessage = getReplyUnknownMessage();
     return await lineClient.replyMessage(replyToken, unknownMessage);
   }
 
@@ -98,7 +98,7 @@ export const botEventHandler = async (
   // ユーザーIDが取得できない場合は、専用メッセージで返信する
   if (!userId) {
     const { replyToken } = event;
-    const unknownMessage = await getReplyUnknownMessage();
+    const unknownMessage = getReplyUnknownMessage();
     return await lineClient.replyMessage(replyToken, unknownMessage);
   }
 
@@ -166,7 +166,7 @@ export const botEventHandler = async (
         `獣害報告ログを作成しました。獣害報告ログID:${log.id}, 獣害報告ID:${log.reportId}`
       );
 
-      response = [await getReplyGeoMessage(), getDamageMessage()];
+      response = [getReplyGeoMessage(), getDamageMessage()];
     } else if (reportMessageType === ReportMessage.DAMAGE && report) {
       const imageId =
         event.message.type === 'image' ? event.message.id : undefined;
@@ -206,17 +206,17 @@ export const botEventHandler = async (
         await deleteReport(report.id);
         logger.info(`獣害報告を削除しました。獣害報告ID:${report.id}`);
       }
-      response = await getReplyFinishMessage();
+      response = getReplyFinishMessage();
     } else if (reportMessageType === ReportMessage.RETRY) {
-      response = await getReplyRetryMessage();
+      response = getReplyRetryMessage();
     } else if (reportMessageType === ReportMessage.USAGE) {
-      response = await getFollowMessage();
+      response = getFollowMessage();
     } else {
-      response = await getReplyUnknownMessage();
+      response = getReplyUnknownMessage();
     }
   } catch (e) {
     logger.error(e);
-    response = await getReplyRetryMessage();
+    response = getReplyRetryMessage();
   }
 
   const { replyToken } = event;
