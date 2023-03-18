@@ -1,22 +1,12 @@
 // Import all dependencies, mostly using destructuring for better view.
-import { middleware, MiddlewareConfig } from '@line/bot-sdk';
-import dotenv from 'dotenv';
+import { middleware } from '@line/bot-sdk';
 import express, { Application } from 'express';
 
 import { cronNotice, cronReportExpire } from './controller/CronController';
 import { reportList } from './controller/ReportController';
 import { webhook } from './controller/WebhookController';
+import { middlewareConfig } from './lib/line/lineClient';
 import { logger } from './lib/log4js/logger';
-
-if (process.env.NODE_ENV == 'development') {
-  dotenv.config();
-}
-
-// middleware
-const middlewareConfig: MiddlewareConfig = {
-  channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
-  channelSecret: process.env.CHANNEL_SECRET || '',
-};
 
 const PORT = process.env.PORT || 3000;
 
