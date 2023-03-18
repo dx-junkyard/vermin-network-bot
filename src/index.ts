@@ -98,7 +98,7 @@ app.get(
         latitude: report.latitude,
         longitude: report.longitude,
         damage: report.damage,
-        address: report.address || null,
+        address: report.locationName || null,
         createdAt: convertUTCtoJST(report.createdAt),
       };
     });

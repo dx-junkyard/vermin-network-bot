@@ -3,14 +3,14 @@ const prisma = new PrismaClient();
 
 export const createReportLog = async (
   reportId: number,
-  type: string,
+  reportType: string,
   content: string,
   nextScheduledType: string
 ): Promise<ReportLog> => {
   return await prisma.reportLog.create({
     data: {
       reportId,
-      type,
+      reportType,
       content,
       nextScheduledType,
     },
