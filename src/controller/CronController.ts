@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
-import { broadcastMessage } from '../lib/line/broadcast';
-import { pushExpireMessage } from '../lib/line/pushMessage';
+import { broadcastMessage } from '../lib/line/Broadcast';
+import { pushExpireMessage } from '../lib/line/PushMessage';
 import {
   deleteReport,
   getExpiredReport,

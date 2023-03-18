@@ -1,7 +1,7 @@
 import { getUnnotifiedEarliestReportContent } from '../../repositories/ReportContentRepository';
 import { completeNotification } from '../../repositories/ReportRepository';
 import { getAlertMessage } from '../../service/message/AlertMessageService';
-import { lineClient } from './lineClient';
+import { lineClient } from './LineClient';
 
 export const broadcastMessage = async (): Promise<boolean> => {
   const report = await getUnnotifiedEarliestReportContent();
