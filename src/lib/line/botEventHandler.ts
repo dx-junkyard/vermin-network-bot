@@ -104,7 +104,7 @@ export const botEventHandler = async (
 
   // 処理中のレポートを取得する
   const report = await getProcessingReport(userId);
-  const log = report ? await getLatestLog(report.id) : null;
+  const log = report ? await getLatestLog(report.id) : undefined;
 
   // メッセージ種別を判定する
   const reportMessageType = classifyReportMessageType(
@@ -118,7 +118,7 @@ export const botEventHandler = async (
   try {
     if (reportMessageType === ReportMessage.START) {
       // 投稿済みの獣害報告が存在する場合は、削除する
-      if (report !== null) {
+      if (report !== undefined) {
         const deletedReport = await deleteReport(report.id);
         logger.info(
           `投稿済みの獣害報告が存在するため、削除しました。報告ID:${deletedReport.id}`
@@ -168,9 +168,10 @@ export const botEventHandler = async (
 
       response = [await getReplyGeoMessage(), getDamageMessage()];
     } else if (reportMessageType === ReportMessage.DAMAGE && report) {
-      const imageId = event.message.type === 'image' ? event.message.id : null;
+      const imageId =
+        event.message.type === 'image' ? event.message.id : undefined;
 
-      let imageUrl = null;
+      let imageUrl = undefined;
       if (imageId) {
         const image = await lineClient.getMessageContent(imageId);
         imageUrl = await uploadImage(imageId, image);

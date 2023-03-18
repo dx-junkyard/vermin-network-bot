@@ -5,8 +5,8 @@ import { ReportMessage, ReportMessageType } from '../types/ReportMessageType';
 
 // FIXME: 直前の投稿済みメッセージを判定条件に追加する
 export function classifyReportMessageType(
-  report: Report | null,
-  log: ReportLog | null,
+  report: Report | undefined,
+  log: ReportLog | undefined,
   eventMessage: EventMessage
 ): ReportMessageType {
   switch (true) {
