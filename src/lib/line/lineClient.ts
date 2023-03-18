@@ -1,4 +1,5 @@
 import { Client, ClientConfig, MiddlewareConfig } from '@line/bot-sdk';
+import { middleware } from '@line/bot-sdk';
 import dotenv from 'dotenv';
 
 if (process.env.NODE_ENV == 'development') {
@@ -19,3 +20,5 @@ export const middlewareConfig: MiddlewareConfig = {
 
 // Create a new LINE SDK client.
 export const lineClient = new Client(clientConfig);
+
+export const middlewareClient = middleware(middlewareConfig);

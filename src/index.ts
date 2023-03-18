@@ -1,11 +1,10 @@
 // Import all dependencies, mostly using destructuring for better view.
-import { middleware } from '@line/bot-sdk';
 import express, { Application } from 'express';
 
 import { cronNotice, cronReportExpire } from './controller/CronController';
 import { reportList } from './controller/ReportController';
 import { webhook } from './controller/WebhookController';
-import { middlewareConfig } from './lib/line/lineClient';
+import { middlewareClient } from './lib/line/lineClient';
 import { logger } from './lib/log4js/logger';
 
 const PORT = process.env.PORT || 3000;
@@ -23,7 +22,7 @@ app.get(`${basePath}/cron/report/expire`, cronReportExpire);
 app.get(`${basePath}/report/list`, reportList);
 
 // This route is used for the Webhook.
-app.post(`${basePath}/webhook`, middleware(middlewareConfig), webhook);
+app.post(`${basePath}/webhook`, middlewareClient, webhook);
 
 if (process.env.NODE_ENV == 'development') {
   // Create a server and listen to it.
