@@ -13,21 +13,22 @@ datasource db {
 
 model ReportLog {
   id                Int      @id @default(autoincrement())
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
   type              String
-  nextScheduledType String
+  nextScheduledType String   @map("next_scheduled_type")
   content           String
   report            Report   @relation(fields: [reportId], references: [id])
-  reportId          Int
+  reportId          Int      @map("report_id")
 
   @@index([reportId])
+  @@map("report_log")
 }
 
 model ReportContent {
   id        Int                     @id @default(autoincrement())
-  createdAt DateTime                @default(now())
-  updatedAt DateTime                @updatedAt
+  createdAt DateTime                @default(now()) @map("created_at")
+  updatedAt DateTime                @updatedAt @map("updated_at")
   animal    String
   damage    String?
   geo       Unsupported("geometry")
@@ -35,30 +36,34 @@ model ReportContent {
   longitude Float
   address   String
   report    Report                  @relation(fields: [reportId], references: [id])
-  reportId  Int                     @unique
+  reportId  Int                     @unique @map("report_id")
 
   @@index([reportId])
+  @@map("report_content")
 }
 
 model Report {
   id          Int            @id @default(autoincrement())
-  userId      String
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  isCompleted Boolean        @default(false)
-  isNotified  Boolean        @default(false)
-  isDeleted   Boolean        @default(false)
+  userId      String         @map("user_id")
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+  isCompleted Boolean        @default(false) @map("is_completed")
+  isNotified  Boolean        @default(false) @map("is_notified")
+  isDeleted   Boolean        @default(false) @map("is_deleted")
   logs        ReportLog[]
   content     ReportContent?
   user        User           @relation(fields: [userId], references: [userId])
 
   @@index([userId])
+  @@map("report")
 }
 
 model User {
   id        Int      @id @default(autoincrement())
-  userId    String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  userId    String   @unique @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
   Report    Report[]
+
+  @@map("user")
 }
