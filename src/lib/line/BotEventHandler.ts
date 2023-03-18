@@ -39,7 +39,7 @@ import { getAnimalOption } from '../../types/AnimalOption';
 import { ContentJson } from '../../types/Content';
 import { ReportMessage } from '../../types/ReportMessageType';
 import { logger } from '../log4js/logger';
-import { lineClient } from './lineClient';
+import { lineClient } from './LineClient';
 
 // Function handler to receive the text.
 export const botEventHandler = async (
