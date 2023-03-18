@@ -1,7 +1,7 @@
 import { TextMessage } from '@line/bot-sdk';
 
 import { logger } from '../log4js/logger';
-import { lineClient } from './lineClient';
+import { lineClient } from './LineClient';
 
 export const pushExpireMessage = async (userId: string): Promise<boolean> => {
   const message = {

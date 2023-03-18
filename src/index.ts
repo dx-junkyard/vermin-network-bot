@@ -4,7 +4,7 @@ import express, { Application } from 'express';
 import { cronNotice, cronReportExpire } from './controller/CronController';
 import { reportList } from './controller/ReportController';
 import { webhook } from './controller/WebhookController';
-import { middlewareClient } from './lib/line/lineClient';
+import { middlewareClient } from './lib/line/LineClient';
 import { logger } from './lib/log4js/logger';
 
 const PORT = process.env.PORT || 3000;
