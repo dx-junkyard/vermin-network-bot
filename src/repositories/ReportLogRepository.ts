@@ -21,13 +21,15 @@ export const createReportLog = async (
 
 export const getLatestLog = async (
   reportId: number
-): Promise<ReportLog | null> => {
-  return await prisma.reportLog.findFirst({
-    where: {
-      reportId,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
+): Promise<ReportLog | undefined> => {
+  return (
+    (await prisma.reportLog.findFirst({
+      where: {
+        reportId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })) || undefined
+  );
 };

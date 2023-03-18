@@ -2,13 +2,7 @@ import { PrismaClient, ReportContent } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export type ReportResult = {
-  createdAt: Date;
-  animal: string;
-  damage: string | null;
-  latitude: number;
-  longitude: number;
-  locationName: string;
+export type ReportResult = ReportContent & {
   report: {
     user: {
       id: number;
@@ -36,12 +30,15 @@ export const getReportContentList = async (
       createdAt: 'desc',
     },
     select: {
+      id: true,
+      updatedAt: true,
       createdAt: true,
       animal: true,
       damage: true,
       latitude: true,
       longitude: true,
       locationName: true,
+      reportId: true,
       report: {
         select: {
           user: {
@@ -55,9 +52,11 @@ export const getReportContentList = async (
   });
 };
 
-export const getUnnotifiedEarliestReportContent =
-  async (): Promise<ReportContent | null> => {
-    return await prisma.reportContent.findFirst({
+export const getUnnotifiedEarliestReportContent = async (): Promise<
+  ReportContent | undefined
+> => {
+  return (
+    (await prisma.reportContent.findFirst({
       where: {
         report: {
           isNotified: false,
@@ -69,5 +68,6 @@ export const getUnnotifiedEarliestReportContent =
       orderBy: {
         createdAt: 'asc',
       },
-    });
-  };
+    })) || undefined
+  );
+};

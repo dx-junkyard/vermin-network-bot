@@ -97,6 +97,7 @@ app.get(
         animal: report.animal,
         latitude: report.latitude,
         longitude: report.longitude,
+        // APIレスポンスのため、nullを許容する
         damage: report.damage,
         address: report.locationName || null,
         createdAt: convertUTCtoJST(report.createdAt),
