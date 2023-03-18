@@ -215,7 +215,7 @@ export const botEventHandler = async (
     }
   } catch (e) {
     logger.error(e);
-    response = await getReplyUnknownMessage();
+    response = await getReplyRetryMessage();
   }
 
   const { replyToken } = event;
