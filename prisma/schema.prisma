@@ -11,63 +11,6 @@ datasource db {
   relationMode = "prisma"
 }
 
-model ReportLogBK {
-  id                Int      @id @default(autoincrement())
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  type              String
-  nextScheduledType String
-  content           String
-  report            ReportBK @relation(fields: [reportId], references: [id])
-  reportId          Int
-
-  @@index([reportId])
-  @@map("ReportLog")
-}
-
-model ReportContentBK {
-  id        Int                     @id @default(autoincrement())
-  createdAt DateTime                @default(now())
-  updatedAt DateTime                @updatedAt
-  animal    String
-  damage    String?
-  geo       Unsupported("geometry")
-  latitude  Float
-  longitude Float
-  address   String
-  report    ReportBK                @relation(fields: [reportId], references: [id])
-  reportId  Int                     @unique
-
-  @@index([reportId])
-  @@map("ReportContent")
-}
-
-model ReportBK {
-  id          Int              @id @default(autoincrement())
-  userId      String
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  isCompleted Boolean          @default(false)
-  isNotified  Boolean          @default(false)
-  isDeleted   Boolean          @default(false)
-  logs        ReportLogBK[]
-  content     ReportContentBK?
-  user        UserBK           @relation(fields: [userId], references: [userId])
-
-  @@index([userId])
-  @@map("Report")
-}
-
-model UserBK {
-  id        Int        @id @default(autoincrement())
-  userId    String     @unique
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  Report    ReportBK[]
-
-  @@map("User")
-}
-
 model ReportLog {
   id                Int      @id @default(autoincrement())
   createdAt         DateTime @default(now()) @map("created_at")
