@@ -11,20 +11,21 @@ datasource db {
   relationMode = "prisma"
 }
 
-model ReportLog {
+model ReportLogBK {
   id                Int      @id @default(autoincrement())
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   type              String
   nextScheduledType String
   content           String
-  report            Report   @relation(fields: [reportId], references: [id])
+  report            ReportBK @relation(fields: [reportId], references: [id])
   reportId          Int
 
   @@index([reportId])
+  @@map("ReportLog")
 }
 
-model ReportContent {
+model ReportContentBK {
   id        Int                     @id @default(autoincrement())
   createdAt DateTime                @default(now())
   updatedAt DateTime                @updatedAt
@@ -34,31 +35,92 @@ model ReportContent {
   latitude  Float
   longitude Float
   address   String
-  report    Report                  @relation(fields: [reportId], references: [id])
+  report    ReportBK                @relation(fields: [reportId], references: [id])
   reportId  Int                     @unique
 
   @@index([reportId])
+  @@map("ReportContent")
+}
+
+model ReportBK {
+  id          Int              @id @default(autoincrement())
+  userId      String
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  isCompleted Boolean          @default(false)
+  isNotified  Boolean          @default(false)
+  isDeleted   Boolean          @default(false)
+  logs        ReportLogBK[]
+  content     ReportContentBK?
+  user        UserBK           @relation(fields: [userId], references: [userId])
+
+  @@index([userId])
+  @@map("Report")
+}
+
+model UserBK {
+  id        Int        @id @default(autoincrement())
+  userId    String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Report    ReportBK[]
+
+  @@map("User")
+}
+
+model ReportLog {
+  id                Int      @id @default(autoincrement())
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+  reportType        String   @map("report_type")
+  nextScheduledType String   @map("next_scheduled_type")
+  content           String
+  report            Report   @relation(fields: [reportId], references: [id])
+  reportId          Int      @map("report_id")
+
+  @@index([reportId])
+  @@map("REPORT_LOG")
+}
+
+model ReportContent {
+  id           Int                     @id @default(autoincrement())
+  createdAt    DateTime                @default(now()) @map("created_at")
+  updatedAt    DateTime                @updatedAt @map("updated_at")
+  animal       String
+  damage       String?
+  geo          Unsupported("geometry")
+  latitude     Float
+  longitude    Float
+  locationName String                  @map("location_name")
+  report       Report                  @relation(fields: [reportId], references: [id])
+  reportId     Int                     @unique @map("report_id")
+
+  @@index([reportId])
+  @@map("REPORT_CONTENT")
 }
 
 model Report {
   id          Int            @id @default(autoincrement())
-  userId      String
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  isCompleted Boolean        @default(false)
-  isNotified  Boolean        @default(false)
-  isDeleted   Boolean        @default(false)
+  userId      String         @map("user_id")
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+  isCompleted Boolean        @default(false) @map("is_completed")
+  isNotified  Boolean        @default(false) @map("is_notified")
+  isDeleted   Boolean        @default(false) @map("is_deleted")
   logs        ReportLog[]
   content     ReportContent?
   user        User           @relation(fields: [userId], references: [userId])
 
   @@index([userId])
+  @@map("REPORT")
 }
 
 model User {
   id        Int      @id @default(autoincrement())
-  userId    String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  userId    String   @unique @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
   Report    Report[]
+
+  @@map("USER")
 }

@@ -34,7 +34,7 @@ export const initReport = async (
     const log = await tx.reportLog.create({
       data: {
         reportId: initialReport.id,
-        type: ReportMessage.START,
+        reportType: ReportMessage.START,
         content: EMPTY_CONTENT,
         nextScheduledType,
       },

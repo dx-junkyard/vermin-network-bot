@@ -8,7 +8,7 @@ export type ReportResult = {
   damage: string | null;
   latitude: number;
   longitude: number;
-  address: string;
+  locationName: string;
   report: {
     user: {
       id: number;
@@ -41,7 +41,7 @@ export const getReportContentList = async (
       damage: true,
       latitude: true,
       longitude: true,
-      address: true,
+      locationName: true,
       report: {
         select: {
           user: {
