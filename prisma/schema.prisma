@@ -17,7 +17,7 @@ model ReportLog {
   updatedAt         DateTime @updatedAt @map("updated_at")
   reportType        String   @map("report_type")
   nextScheduledType String   @map("next_scheduled_type")
-  content           String
+  content           Json
   report            Report   @relation(fields: [reportId], references: [id])
   reportId          Int      @map("report_id")
 

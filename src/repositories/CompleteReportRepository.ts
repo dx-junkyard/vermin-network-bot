@@ -24,16 +24,19 @@ export const completeReport = async (id: number): Promise<number> => {
     });
 
     // 獣害報告ログから獣害報告内容を作成し、獣害報告内容テーブルに保存する
-    const animal = JSON.parse(getElementByType('animal', reportLogs))?.animal;
-    const damage = JSON.parse(getElementByType('damage', reportLogs))?.imageUrl;
-    const geo = JSON.parse(getElementByType('geo', reportLogs));
+    // const animal = JSON.parse(getElementByType('animal', reportLogs))?.animal;
+    // const damage = JSON.parse(getElementByType('damage', reportLogs))?.imageUrl;
+    // const geo = JSON.parse(getElementByType('geo', reportLogs));
+    const animal = getElementByType('animal', reportLogs)?.animal;
+    const damage = getElementByType('damage', reportLogs)?.imageUrl;
+    const geo = getElementByType('geo', reportLogs);
     const latitude = Math.round((geo?.latitude || 0) * 1000000) / 1000000;
     const longitude = Math.round((geo?.longitude || 0) * 1000000) / 1000000;
     const address = geo?.address || '';
     const point = `POINT(${latitude} ${longitude})`;
 
     const num =
-      await tx.$executeRaw`INSERT INTO ReportContent (reportId, animal, damage, geo, latitude, longitude, address, updatedAt) VALUES (${id}, ${animal}, ${damage}, ST_GEOMFROMTEXT(${point}, 4326), ${latitude}, ${longitude}, ${address}, CURRENT_TIMESTAMP)`;
+      await tx.$executeRaw`INSERT INTO REPORT_CONTENT (report_id, animal, damage, geo, latitude, longitude, location_name, updated_at) VALUES (${id}, ${animal}, ${damage}, ST_GEOMFROMTEXT(${point}, 4326), ${latitude}, ${longitude}, ${address}, CURRENT_TIMESTAMP)`;
 
     // 獣害報告を完了にする
     await tx.report.update({

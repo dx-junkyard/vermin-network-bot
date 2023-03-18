@@ -1,6 +1,5 @@
 import { PrismaClient } from '@prisma/client';
 
-import { EMPTY_CONTENT } from '../types/Content';
 import { ReportMessage, ReportMessageType } from '../types/ReportMessageType';
 
 const prisma = new PrismaClient();
@@ -35,7 +34,7 @@ export const initReport = async (
       data: {
         reportId: initialReport.id,
         reportType: ReportMessage.START,
-        content: EMPTY_CONTENT,
+        content: {},
         nextScheduledType,
       },
     });

@@ -1,10 +1,12 @@
 import { PrismaClient, ReportLog } from '@prisma/client';
+
+import { ContentJson } from '../types/Content';
 const prisma = new PrismaClient();
 
 export const createReportLog = async (
   reportId: number,
   reportType: string,
-  content: string,
+  content: ContentJson,
   nextScheduledType: string
 ): Promise<ReportLog> => {
   return await prisma.reportLog.create({
