@@ -1,4 +1,4 @@
-import { Client, ClientConfig } from '@line/bot-sdk';
+import { Client, ClientConfig, MiddlewareConfig } from '@line/bot-sdk';
 import dotenv from 'dotenv';
 
 if (process.env.NODE_ENV == 'development') {
@@ -9,6 +9,12 @@ if (process.env.NODE_ENV == 'development') {
 const clientConfig: ClientConfig = {
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN || '',
   channelSecret: process.env.CHANNEL_SECRET,
+};
+
+// middleware
+export const middlewareConfig: MiddlewareConfig = {
+  channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
+  channelSecret: process.env.CHANNEL_SECRET || '',
 };
 
 // Create a new LINE SDK client.
