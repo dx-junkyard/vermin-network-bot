@@ -1,7 +1,7 @@
 {
-  "name": "line-bot-starter",
+  "name": "vermin-network-bot",
   "version": "1.0.0",
-  "description": "An example LINE bot with TypeScript made to echo messages",
+  "description": "A template LINE bot to report incidents of animal damage.",
   "main": "./dist/index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon --exec ts-node src/index.ts",
