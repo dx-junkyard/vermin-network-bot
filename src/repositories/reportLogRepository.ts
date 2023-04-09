@@ -1,6 +1,6 @@
 import { PrismaClient, ReportLog } from '@prisma/client';
 
-import { ContentJson } from '../types/Content';
+import { ContentJson } from '../types/content';
 const prisma = new PrismaClient();
 
 export const createReportLog = async (

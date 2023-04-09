@@ -7,39 +7,39 @@ import {
   WebhookEvent,
 } from '@line/bot-sdk';
 
-import { completeReport } from '../../repositories/CompleteReportRepository';
-import { uploadImage } from '../../repositories/ImageUploadRepository';
-import { initReport } from '../../repositories/InitReportRepository';
+import { completeReport } from '../../repositories/completeReportRepository';
+import { uploadImage } from '../../repositories/imageUploadRepository';
+import { initReport } from '../../repositories/initReportRepository';
 import {
   createReportLog,
   getLatestLog,
-} from '../../repositories/ReportLogRepository';
+} from '../../repositories/reportLogRepository';
 import {
   deleteReport,
   getProcessingReport,
-} from '../../repositories/ReportRepository';
-import { createUser } from '../../repositories/UserRepository';
-import { classifyReportMessageType } from '../../service/ClassifyReportMessageTypeService';
+} from '../../repositories/reportRepository';
+import { createUser } from '../../repositories/userRepository';
+import { classifyReportMessageType } from '../../service/classifyReportMessageTypeService';
 import {
   getAnimalOptionMessage,
   getReployAnimalMessage,
-} from '../../service/message/AnimalMessageService';
-import { getCompleteMessage } from '../../service/message/CompleteMessageService';
-import { getDamageMessage } from '../../service/message/DamageMessageService';
-import { getReplyFinishMessage } from '../../service/message/FinishMessageService';
-import { getFollowMessage } from '../../service/message/FollowMessageService';
+} from '../../service/message/animalMessageService';
+import { getCompleteMessage } from '../../service/message/completeMessageService';
+import { getDamageMessage } from '../../service/message/damageMessageService';
+import { getReplyFinishMessage } from '../../service/message/finishMessageService';
+import { getFollowMessage } from '../../service/message/followMessageService';
 import {
   getGeoMessage,
   getReplyGeoMessage,
-} from '../../service/message/GeoMessageService';
-import { getReplyRetryMessage } from '../../service/message/RetryMessageService';
-import { getReplyStartMessage } from '../../service/message/StartMessageService';
-import { getReplyUnknownMessage } from '../../service/message/UnknownMessageService';
-import { getAnimalOption } from '../../types/AnimalOption';
-import { ContentJson } from '../../types/Content';
-import { ReportMessage } from '../../types/ReportMessageType';
+} from '../../service/message/geoMessageService';
+import { getReplyRetryMessage } from '../../service/message/retryMessageService';
+import { getReplyStartMessage } from '../../service/message/startMessageService';
+import { getReplyUnknownMessage } from '../../service/message/unknownMessageService';
+import { getAnimalOption } from '../../types/animalOption';
+import { ContentJson } from '../../types/content';
+import { ReportMessage } from '../../types/reportMessageType';
 import { logger } from '../log4js/logger';
-import { lineClient } from './LineClient';
+import { lineClient } from './lineClient';
 
 // Function handler to receive the text.
 export const botEventHandler = async (

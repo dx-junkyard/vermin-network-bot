@@ -1,7 +1,7 @@
 import { WebhookEvent } from '@line/bot-sdk';
 import { Request, Response } from 'express';
 
-import { botEventHandler } from '../lib/line/BotEventHandler';
+import { botEventHandler } from '../lib/line/botEventHandler';
 import { logger } from '../lib/log4js/logger';
 
 export const webhook = async (

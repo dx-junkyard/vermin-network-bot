@@ -1,4 +1,4 @@
-import { ContentJson } from './Content';
+import { ContentJson } from './content';
 
 export const AnimalOption = {
   BOAR: {

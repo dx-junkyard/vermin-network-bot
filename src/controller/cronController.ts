@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 
-import { broadcastMessage } from '../lib/line/Broadcast';
-import { pushExpireMessage } from '../lib/line/PushMessage';
+import { broadcastMessage } from '../lib/line/broadcast';
+import { pushExpireMessage } from '../lib/line/pushMessage';
 import {
   deleteReport,
   getExpiredReport,
   isAllCompleteReport,
-} from '../repositories/ReportRepository';
+} from '../repositories/reportRepository';
 
 const EXPIRE_MINUTES = 30;
 

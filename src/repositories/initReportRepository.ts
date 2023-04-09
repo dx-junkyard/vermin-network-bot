@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-import { ReportMessage, ReportMessageType } from '../types/ReportMessageType';
+import { ReportMessage, ReportMessageType } from '../types/reportMessageType';
 
 const prisma = new PrismaClient();
 
