@@ -1,7 +1,7 @@
 // Import all dependencies, mostly using destructuring for better view.
 import express, { Application } from 'express';
 
-import { cronNotice, cronReportExpire } from './controller/CronController';
+import { cronNotice, cronReportExpire } from './controller/cronController';
 import { reportList } from './controller/ReportController';
 import { webhook } from './controller/WebhookController';
 import { middlewareClient } from './lib/line/LineClient';
