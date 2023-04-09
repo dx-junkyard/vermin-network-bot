@@ -4,7 +4,7 @@ import {
   AnimalOption,
   AnimalOptionType,
   getAnimalOption,
-} from '../../types/AnimalOption';
+} from '../../types/animalOption';
 
 /**
  * 害獣の選択肢メッセージに対する返信を取得する

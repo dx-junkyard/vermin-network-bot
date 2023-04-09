@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
-import { getReportContentList } from '../repositories/ReportContentRepository';
-import { convertUTCtoJST, toDate } from '../utils/DateUtils';
+import { getReportContentList } from '../repositories/reportContentRepository';
+import { convertUTCtoJST, toDate } from '../utils/dateUtils';
 
 export const reportList = async (
   req: Request,

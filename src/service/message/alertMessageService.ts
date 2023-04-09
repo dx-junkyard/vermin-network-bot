@@ -1,8 +1,8 @@
 import { Message } from '@line/bot-sdk';
 import { ReportContent } from '@prisma/client';
 
-import { getAnimalOptionByKeyword } from '../../types/AnimalOption';
-import { convertUTCtoJST } from '../../utils/DateUtils';
+import { getAnimalOptionByKeyword } from '../../types/animalOption';
+import { convertUTCtoJST } from '../../utils/dateUtils';
 
 export const getAlertMessage = async (
   report: ReportContent

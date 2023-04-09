@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-import { getElementByType } from '../types/Content';
+import { getElementByType } from '../types/content';
 
 const prisma = new PrismaClient();
 

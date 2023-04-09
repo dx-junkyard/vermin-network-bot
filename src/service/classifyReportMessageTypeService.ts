@@ -1,7 +1,7 @@
 import { EventMessage } from '@line/bot-sdk';
 import { Report, ReportLog } from '@prisma/client';
 
-import { ReportMessage, ReportMessageType } from '../types/ReportMessageType';
+import { ReportMessage, ReportMessageType } from '../types/reportMessageType';
 
 export function classifyReportMessageType(
   report: Report | undefined,
