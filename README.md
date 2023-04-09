@@ -47,4 +47,3 @@ yarn dev
 ## Reference
 
 - https://github.com/line/line-bot-sdk-nodejs/tree/next/examples/echo-bot-ts
--
