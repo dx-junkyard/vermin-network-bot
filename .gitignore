@@ -7,3 +7,6 @@ dist/
 .vercel
 tsconfig.tsbuildinfo
 yarn-error.log
+
+# Mac files
+.DS_Store
