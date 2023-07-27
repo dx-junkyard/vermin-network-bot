@@ -33,7 +33,7 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "eslint": "8.45.0",
-    "eslint-config-prettier": "8.8.0",
+    "eslint-config-prettier": "8.9.0",
     "eslint-plugin-simple-import-sort": "10.0.0",
     "husky": "^8.0.2",
     "lint-staged": "^13.0.3",
